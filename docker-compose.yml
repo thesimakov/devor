@@ -1,0 +1,69 @@
+# Явное имя проекта: иначе Docker Compose может не вывести имя из папки с пробелами/кириллицей («project name must not be empty»).
+name: devor
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: devor
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  backend:
+    image: python:3.12-slim
+    working_dir: /app
+    command: sh -c "pip install -r requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/devor
+      - STORAGE_MODE=local
+      - MEDIA_ROOT=media
+      - MEDIA_URL_PREFIX=/media
+      - SMS_PROVIDER=mock
+      - SHOW_DEBUG_OTP=true
+      - JWT_SECRET=change_me_for_prod
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+      - ./backend/media:/app/media
+
+  frontend:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - INTERNAL_API_URL=http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  # Опционально: polling-бот для привязки Telegram и уведомлений (нужен TELEGRAM_BOT_TOKEN)
+  telegram:
+    image: python:3.12-slim
+    working_dir: /app
+    command: sh -c "pip install -r requirements.txt && python telegram_bot.py"
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/devor
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_BOT_USERNAME=${TELEGRAM_BOT_USERNAME:-DevorLocalBot}
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+    profiles:
+      - telegram
+
+volumes:
+  pg_data:

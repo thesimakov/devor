@@ -1,0 +1,10 @@
+{
+  "name": "Devor — услуги",
+  "short_name": "Devor",
+  "description": "Маркетплейс бытовых услуг (Таджикистан)",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0ea5e9",
+  "lang": "ru"
+}

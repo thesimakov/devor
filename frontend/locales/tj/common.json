@@ -1,0 +1,23 @@
+{
+  "common": {
+    "cities": {
+      "dushanbe": "Душанбе",
+      "khujand": "Хуҷанд",
+      "bokhtar": "Бохтар",
+      "kulob": "Кулоб",
+      "istaravshan": "Истаравшан",
+      "tursunzoda": "Турсунзода"
+    },
+    "negotiable": "Бо мувофиқа",
+    "free": "Ройгон",
+    "currencyShort": "сом.",
+    "currencyWallet": "с.",
+    "from": "аз",
+    "photo": "Акс",
+    "km": "км",
+    "loginForFavorites": "Барои илова кардан ба интихобот ба профил ворид шавед.",
+    "favoritesUpdateError": "Интихоботро нав кардан муяссар нашуд",
+    "ninetyNinePlus": "99+",
+    "tajikistan": "Точикистон"
+  }
+}

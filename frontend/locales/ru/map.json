@@ -1,0 +1,15 @@
+{
+  "map": {
+    "sectionAria": "Карта объявлений",
+    "titleWithCity": "Карта объявлений ({{city}})",
+    "emptyHint": "Когда появятся объявления, их можно будет посмотреть на карте.",
+    "openMapAria": "Открыть карту",
+    "mapTitle": "Карта — {{city}}",
+    "openOsm": "Открыть в OpenStreetMap",
+    "showOnMap": "Показать объявления на карте",
+    "closeMapAria": "Закрыть карту",
+    "showList": "Показать список",
+    "collapseList": "Свернуть список",
+    "fromPrice": "от {{price}}"
+  }
+}

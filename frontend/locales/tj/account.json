@@ -1,0 +1,31 @@
+{
+  "account": {
+    "myListingsTitle": "Эълонҳои ман",
+    "myListingsSubtitle": "Нашрҳои худро идора кунед ва посухҳоро пайгирӣ кунед.",
+    "listingsCountLabel": "эълон",
+    "searchMyListings": "Ҷустуҷӯ дар эълонҳои ман",
+    "sortNewFirst": "Аввал навҳо",
+    "sortByPrice": "Аз рӯи нарх",
+    "sortByViews": "Аз рӯи дидан",
+    "sortDesc": "Камшаванда",
+    "sortAsc": "Зиёдшаванда",
+    "inTop": "Дар TOP",
+    "open": "Кушодан",
+    "extendTop": "Тӯл додани TOP",
+    "boostTop": "Ба TOP бардоштан",
+    "delete": "Нест кардан",
+    "emptyFilter": "Бо филтрҳои ҷорӣ эълон ёфт нашуд.",
+    "loginToSeeListings": "Барои дидани эълонҳои худ ворид шавед.",
+    "views": "{{count}} дидан",
+    "favoritesTitle": "Интихобот",
+    "favoritesSubtitle": "Эълонҳое, ки мехоҳед бозгардед. Нархҳоро муқоиса кунед ва ба фурӯшандагон як клик нависед.",
+    "favoritesImageAlt": "Интихоби дӯстдошта",
+    "removeFavorite": "Аз интихобот хориҷ кардан",
+    "favoritesEmptyTitle": "Ҳоло холӣ аст",
+    "favoritesEmptyTip": "Эълонҳоро аз саҳифаи асосӣ ё аз саҳифаи эълон ба интихобот илова кунед — нишонаи дил дар корт.",
+    "loginForFavorites": "Барои дидани интихобот ворид шавед.",
+    "favoritesGuestSubtitle": "Ба профил ворид шавед, то эълонҳоро нигоҳ доред ва пешниҳодҳои ҷолибро гум накунед.",
+    "favoritesGuestTip": "Барои дидани эълонҳои интихобшуда ворид шавед.",
+    "goToListings": "Ба эълонҳо гузаштан"
+  }
+}

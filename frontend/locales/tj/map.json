@@ -1,0 +1,15 @@
+{
+  "map": {
+    "sectionAria": "Харитаи эълонҳо",
+    "titleWithCity": "Харитаи эълонҳо ({{city}})",
+    "emptyHint": "Вақте эълонҳо пайдо шаванд, онҳоро дар харита дидан мумкин аст.",
+    "openMapAria": "Кушодани харита",
+    "mapTitle": "Харита — {{city}}",
+    "openOsm": "Кушодан дар OpenStreetMap",
+    "showOnMap": "Нишон додани эълонҳо дар харита",
+    "closeMapAria": "Пӯшидани харита",
+    "showList": "Нишон додани рӯйхат",
+    "collapseList": "Печондани рӯйхат",
+    "fromPrice": "аз {{price}}"
+  }
+}

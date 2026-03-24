@@ -1,0 +1,23 @@
+{
+  "common": {
+    "cities": {
+      "dushanbe": "Душанбе",
+      "khujand": "Худжанд",
+      "bokhtar": "Бохтар",
+      "kulob": "Кулоб",
+      "istaravshan": "Истаравшан",
+      "tursunzoda": "Турсунзода"
+    },
+    "negotiable": "Договорная",
+    "free": "Бесплатно",
+    "currencyShort": "смн",
+    "currencyWallet": "с.",
+    "from": "от",
+    "photo": "Фото",
+    "km": "км",
+    "loginForFavorites": "Войдите в профиль, чтобы добавлять объявления в избранное.",
+    "favoritesUpdateError": "Не удалось обновить избранное",
+    "ninetyNinePlus": "99+",
+    "tajikistan": "Таджикистан"
+  }
+}

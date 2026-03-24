@@ -1,0 +1,30 @@
+{
+  "header": {
+    "quickLinksAria": "Пайвандҳои зуд",
+    "homeAria": "Devor — саҳифаи асосӣ",
+    "myListings": "Эълонҳои ман",
+    "favorites": "Интихобот",
+    "wallet": "Ҳамён",
+    "walletTitle": "Боқимонда ва пешбурди эълонҳо",
+    "balancePrefix": "Боқимонда",
+    "categories": "Категорияҳо",
+    "searchPlaceholder": "Ҷустуҷӯ дар эълонҳо",
+    "find": "Ёфтан",
+    "postListing": "Гузоштани эълон",
+    "postListingPlus": "+ Гузоштани эълон",
+    "cityAria": "Шаҳр",
+    "langAria": "Забон",
+    "favoriteTitle": "Интихобот",
+    "messages": "Паёмҳо",
+    "profile": "Профил",
+    "profileTitle": "Профил",
+    "toastNewMessage": "Шумо паёми нав доред",
+    "toastNewMessageFrom": "Паёми нав: {{title}}",
+    "forBusiness": "Барои тиҷорат",
+    "career": "Карера",
+    "help": "Кӯмак",
+    "catalogs": "Каталогҳо",
+    "login": "Ворид шудан",
+    "call": "Занг задан"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "header": {
+    "quickLinksAria": "Быстрые ссылки",
+    "homeAria": "Devor — главная",
+    "myListings": "Мои объявления",
+    "favorites": "Избранное",
+    "wallet": "Кошелёк",
+    "walletTitle": "Баланс и продвижение объявлений",
+    "balancePrefix": "Баланс",
+    "categories": "Категории",
+    "searchPlaceholder": "Поиск по объявлениям",
+    "find": "Найти",
+    "postListing": "Разместить объявление",
+    "postListingPlus": "+ Разместить объявление",
+    "cityAria": "Город",
+    "langAria": "Язык",
+    "favoriteTitle": "Избранное",
+    "messages": "Сообщения",
+    "profile": "Профиль",
+    "profileTitle": "Профиль",
+    "toastNewMessage": "У вас новое сообщение",
+    "toastNewMessageFrom": "Новое сообщение: {{title}}",
+    "forBusiness": "Для бизнеса",
+    "career": "Карьера",
+    "help": "Помощь",
+    "catalogs": "Каталоги",
+    "login": "Войти",
+    "call": "Позвонить"
+  }
+}

@@ -1,0 +1,1150 @@
+[
+  {
+    "name_ru": "Автосервис, аренда",
+    "slug": "avtoservis-arenda",
+    "children": [
+      {
+        "name_ru": "Автосервисы для автомобилей",
+        "slug": "avtoservis-dlya-avtomobiley",
+        "children": []
+      },
+      {
+        "name_ru": "Автосервисы для грузовиков и спецтехники",
+        "slug": "avtoservis-gruzoviki-spectehnika",
+        "children": []
+      },
+      {
+        "name_ru": "Автосервисы для другой техники",
+        "slug": "avtoservis-drugaya-tehnika",
+        "children": []
+      },
+      {
+        "name_ru": "Аренда авто",
+        "slug": "arenda-avto",
+        "children": []
+      },
+      {
+        "name_ru": "Аренда спецтехники",
+        "slug": "arenda-spectehniki",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Перевозки и доставка",
+    "slug": "perevozki-dostavka",
+    "children": [
+      {
+        "name_ru": "По городу",
+        "slug": "perevozki-po-gorodu",
+        "children": []
+      },
+      {
+        "name_ru": "Между городами",
+        "slug": "perevozki-mezhdu-gorodami",
+        "children": []
+      },
+      {
+        "name_ru": "Международные",
+        "slug": "perevozki-mezhdunarodnye",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Пассажирские перевозки",
+    "slug": "passazhirskie-perevozki",
+    "children": [
+      {
+        "name_ru": "Трансфер",
+        "slug": "passazhir-transfer",
+        "children": []
+      },
+      {
+        "name_ru": "Авто под заказ",
+        "slug": "passazhir-avto-pod-zakaz",
+        "children": []
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "passazhir-drugoe",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Грузчики, складские услуги",
+    "slug": "gruzchiki-sklad",
+    "children": [
+      {
+        "name_ru": "Грузчики",
+        "slug": "gruzchiki-uslugi",
+        "children": []
+      },
+      {
+        "name_ru": "Погрузка и разгрузка",
+        "slug": "gruzchiki-pogruzka-razgruzka",
+        "children": []
+      },
+      {
+        "name_ru": "Складские работы",
+        "slug": "gruzchiki-skladskie-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Фулфилмент",
+        "slug": "fulfilment-uslugi",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Услуги эвакуатора",
+    "slug": "evakuator",
+    "children": [
+      {
+        "name_ru": "Эвакуация легковых авто",
+        "slug": "evakuator-legkovye",
+        "children": []
+      },
+      {
+        "name_ru": "Эвакуация грузовиков и спецтехники",
+        "slug": "evakuator-gruzovye",
+        "children": []
+      },
+      {
+        "name_ru": "Мото и малогабарит",
+        "slug": "evakuator-moto",
+        "children": []
+      },
+      {
+        "name_ru": "Подзаряд / техпомощь на дороге",
+        "slug": "evakuator-tehpomoshch",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Ремонт и отделка",
+    "slug": "remont-otdelka",
+    "children": [
+      {
+        "name_ru": "Ремонт квартир и домов под ключ",
+        "slug": "remont-kvartir-domov-pod-klyuch",
+        "children": []
+      },
+      {
+        "name_ru": "Дизайн интерьеров",
+        "slug": "dizayn-intererov",
+        "children": []
+      },
+      {
+        "name_ru": "Сантехника",
+        "slug": "santehnika",
+        "children": []
+      },
+      {
+        "name_ru": "Электрика",
+        "slug": "elektrika",
+        "children": []
+      },
+      {
+        "name_ru": "Сборка и ремонт мебели",
+        "slug": "sborka-remont-mebeli",
+        "children": []
+      },
+      {
+        "name_ru": "Окна и балконы",
+        "slug": "okna-balkony",
+        "children": []
+      },
+      {
+        "name_ru": "Мастер на час",
+        "slug": "master-na-chas",
+        "children": []
+      },
+      {
+        "name_ru": "Вскрытие и ремонт замков",
+        "slug": "vskrytie-remont-zamkov",
+        "children": []
+      },
+      {
+        "name_ru": "Поклейка обоев и малярные работы",
+        "slug": "oboi-malyarnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Потолки",
+        "slug": "potolki-remont",
+        "children": []
+      },
+      {
+        "name_ru": "Полы и напольные покрытия",
+        "slug": "poly-napolnye-pokrytiya",
+        "children": []
+      },
+      {
+        "name_ru": "Штукатурные работы",
+        "slug": "shtukaturnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Двери",
+        "slug": "dveri-remont",
+        "children": []
+      },
+      {
+        "name_ru": "Плиточные работы",
+        "slug": "plitochnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Столярные и плотницкие работы",
+        "slug": "stolyarnye-plotnickie",
+        "children": []
+      },
+      {
+        "name_ru": "Гипсокартонные работы",
+        "slug": "gipsokartonnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Высотные работы",
+        "slug": "vysotnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Изоляция и утепление",
+        "slug": "izolyatsiya-uteplenie",
+        "children": []
+      },
+      {
+        "name_ru": "Ремонт коммерческих помещений",
+        "slug": "remont-kommercheskih-pomescheniy",
+        "children": []
+      },
+      {
+        "name_ru": "Вентиляция",
+        "slug": "ventilyatsiya-remont",
+        "children": []
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "remont-otdelka-drugoe",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Строительство",
+    "slug": "stroitelstvo",
+    "children": [
+      {
+        "name_ru": "Строительство домов под ключ",
+        "slug": "stroitelstvo-domov-pod-klyuch",
+        "children": []
+      },
+      {
+        "name_ru": "Строительство гаражей, бань, веранд",
+        "slug": "stroitelstvo-garazhey-ban-verand",
+        "children": []
+      },
+      {
+        "name_ru": "Отделка деревянных домов, бань, саун",
+        "slug": "otdelka-derevyannyh-domov-ban-saun",
+        "children": []
+      },
+      {
+        "name_ru": "Кладочные работы",
+        "slug": "kladochnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Кровельные работы",
+        "slug": "krovelnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Сварка, ковка, металлоконструкции",
+        "slug": "svarka-kovka-metallokonstruktsii",
+        "children": []
+      },
+      {
+        "name_ru": "Фундаментные и бетонные работы",
+        "slug": "fundament-betonnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Алмазное сверление и резка",
+        "slug": "almaznoe-sverlenie-rezka",
+        "children": []
+      },
+      {
+        "name_ru": "Снос и демонтаж",
+        "slug": "snos-demontazh",
+        "children": []
+      },
+      {
+        "name_ru": "Фасадные работы",
+        "slug": "fasadnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Проектирование и сметы",
+        "slug": "proektirovanie-smety",
+        "children": []
+      },
+      {
+        "name_ru": "Разнорабочие",
+        "slug": "raznorabochie-stroyka",
+        "children": []
+      },
+      {
+        "name_ru": "Изыскательные работы",
+        "slug": "izyskatelnye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Лестницы",
+        "slug": "lestnitsy-stroyka",
+        "children": []
+      },
+      {
+        "name_ru": "Газификация",
+        "slug": "gazifikatsiya",
+        "children": []
+      },
+      {
+        "name_ru": "Коммерческое строительство",
+        "slug": "kommercheskoe-stroitelstvo",
+        "children": []
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "stroitelstvo-drugoe",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Сад, благоустройство",
+    "slug": "sad-blagoustroystvo",
+    "children": [
+      {
+        "name_ru": "Бурение, скважины, септики, колодцы",
+        "slug": "burenie-skvazhiny-septiki",
+        "children": []
+      },
+      {
+        "name_ru": "Водоёмы, бассейны, фонтаны",
+        "slug": "vodoemy-basseyny-fontany",
+        "children": []
+      },
+      {
+        "name_ru": "Дорожное строительство",
+        "slug": "dorozhnoe-stroitelstvo",
+        "children": []
+      },
+      {
+        "name_ru": "Ограждения, навесы, рольставни",
+        "slug": "ograzhdeniya-navesy-rolstavni",
+        "children": []
+      },
+      {
+        "name_ru": "Земляные работы",
+        "slug": "zemlyanye-raboty",
+        "children": []
+      },
+      {
+        "name_ru": "Озеленение, уход за садом и огородом",
+        "slug": "ozelenenie-sad-ogorod",
+        "children": []
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "sad-blagoustroystvo-drugoe",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Компьютерная помощь",
+    "slug": "kompyuternaya-pomosh",
+    "children": [
+      {
+        "name_ru": "Компьютеры",
+        "slug": "kompyutery-pomosh",
+        "children": []
+      },
+      {
+        "name_ru": "Принтеры",
+        "slug": "printery-pomosh",
+        "children": []
+      },
+      {
+        "name_ru": "Оборудование для майнинга",
+        "slug": "majning-oborudovanie-pomosh",
+        "children": []
+      },
+      {
+        "name_ru": "Игровые приставки",
+        "slug": "igrovye-pristavki-pomosh",
+        "children": []
+      },
+      {
+        "name_ru": "ОС и программы",
+        "slug": "os-programmy-pomosh",
+        "children": []
+      },
+      {
+        "name_ru": "Интернет и другие сети",
+        "slug": "internet-seti-pomosh",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Красота",
+    "slug": "krasota",
+    "children": [
+      {
+        "name_ru": "Маникюр, педикюр",
+        "slug": "beauty-manikyur-pedikyur",
+        "children": [],
+        "name_tj": "Маникюр ва педикюр"
+      },
+      {
+        "name_ru": "Услуги парикмахера",
+        "slug": "beauty-parikmaherskie-uslugi",
+        "children": [],
+        "name_tj": "Хизматҳои сартарош"
+      },
+      {
+        "name_ru": "Ресницы, брови",
+        "slug": "beauty-resnitsy-brovi",
+        "children": [],
+        "name_tj": "Пилкҳо ва абрӯвон"
+      },
+      {
+        "name_ru": "Перманентный макияж",
+        "slug": "beauty-permanentnyy-makiyazh",
+        "children": [],
+        "name_tj": "Ороиши доимӣ"
+      },
+      {
+        "name_ru": "Косметология",
+        "slug": "beauty-kosmetologiya",
+        "children": [],
+        "name_tj": "Косметология"
+      },
+      {
+        "name_ru": "Эпиляция",
+        "slug": "beauty-epilyatsiya",
+        "children": [],
+        "name_tj": "Бартарафсозии мӯй"
+      },
+      {
+        "name_ru": "Макияж",
+        "slug": "beauty-makiyazh",
+        "children": [],
+        "name_tj": "Ороиш"
+      },
+      {
+        "name_ru": "СПА-услуги, массаж",
+        "slug": "beauty-spa-massazh",
+        "children": [],
+        "name_tj": "Хизматҳои СПА ва массаж"
+      },
+      {
+        "name_ru": "Тату, пирсинг",
+        "slug": "beauty-tatu-pirsing",
+        "children": [],
+        "name_tj": "Тату ва пирсинг"
+      },
+      {
+        "name_ru": "Аренда рабочего места",
+        "slug": "beauty-arenda-rabochego-mesta",
+        "children": [],
+        "name_tj": "Иҷораи ҷойи корӣ"
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "beauty-drugoe",
+        "children": [],
+        "name_tj": "Дигар"
+      }
+    ],
+    "name_tj": "Зебоӣ"
+  },
+  {
+    "name_ru": "Здоровье",
+    "slug": "zdorovie",
+    "children": [
+      {
+        "name_ru": "Психология",
+        "slug": "zdorovie-psihologiya",
+        "children": []
+      },
+      {
+        "name_ru": "Диетология",
+        "slug": "zdorovie-dietologiya",
+        "children": []
+      },
+      {
+        "name_ru": "Фитнес, йога",
+        "slug": "zdorovie-fitnes-yoga",
+        "children": []
+      },
+      {
+        "name_ru": "Стоматология",
+        "slug": "zdorovie-stomatologiya",
+        "children": []
+      },
+      {
+        "name_ru": "Подология",
+        "slug": "zdorovie-podologiya",
+        "children": []
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "zdorovie-drugoe",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Ремонт и обслуживание техники",
+    "slug": "remont-tehniki",
+    "children": [
+      {
+        "name_ru": "Телевизоры",
+        "slug": "remont-televizory",
+        "children": []
+      },
+      {
+        "name_ru": "Мобильные устройства",
+        "slug": "remont-mobilnye-ustroystva",
+        "children": []
+      },
+      {
+        "name_ru": "Фото-, аудио-, видеотехника",
+        "slug": "remont-foto-audio-video",
+        "children": []
+      },
+      {
+        "name_ru": "Кондиционеры, вентиляция",
+        "slug": "remont-konditsionery-ventilyatsiya",
+        "children": []
+      },
+      {
+        "name_ru": "Стиральные, сушильные машины",
+        "slug": "remont-stiralnye-sushilnye",
+        "children": []
+      },
+      {
+        "name_ru": "Посудомоечные машины",
+        "slug": "remont-posudomoechnye",
+        "children": []
+      },
+      {
+        "name_ru": "Холодильники, морозильные камеры",
+        "slug": "remont-holodilniki-morozilniki",
+        "children": []
+      },
+      {
+        "name_ru": "Варочные панели, духовые шкафы",
+        "slug": "remont-varochnye-duhovye",
+        "children": []
+      },
+      {
+        "name_ru": "Газовые котлы, водонагреватели",
+        "slug": "remont-kotly-vodonagrevateli",
+        "children": []
+      },
+      {
+        "name_ru": "Кофемашины",
+        "slug": "remont-kofemashiny",
+        "children": []
+      },
+      {
+        "name_ru": "Швейные машины, оверлоки",
+        "slug": "remont-shveynye-overloki",
+        "children": []
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "remont-tehniki-drugoe",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Монтаж и установка техники",
+    "slug": "montazh-ustanovka-tehniki",
+    "children": [
+      {
+        "name_ru": "Телевизоры и кронштейны",
+        "slug": "montazh-televizory",
+        "children": []
+      },
+      {
+        "name_ru": "Кондиционеры и сплит-системы",
+        "slug": "montazh-konditsionery",
+        "children": []
+      },
+      {
+        "name_ru": "Кухонная техника",
+        "slug": "montazh-kuhonnaya-tehnika",
+        "children": []
+      },
+      {
+        "name_ru": "Стиральные и сушильные машины",
+        "slug": "montazh-stiralnye",
+        "children": []
+      },
+      {
+        "name_ru": "Водонагреватели и фильтры",
+        "slug": "montazh-vodonagrevateli-filtry",
+        "children": []
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "montazh-drugoe",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Оборудование, производство",
+    "slug": "oborudovanie-proizvodstvo",
+    "children": [
+      {
+        "name_ru": "Аренда оборудования",
+        "slug": "arenda-oborudovaniya",
+        "children": []
+      },
+      {
+        "name_ru": "Производство, обработка",
+        "slug": "proizvodstvo-obrabotka",
+        "children": []
+      },
+      {
+        "name_ru": "Ремонт промышленного оборудования",
+        "slug": "oborudovanie-remont-promyshlennogo",
+        "children": []
+      },
+      {
+        "name_ru": "Настройка и пусконаладка",
+        "slug": "oborudovanie-puskonaladka",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Обучение, курсы",
+    "slug": "obuchenie-kursy",
+    "children": [
+      {
+        "name_ru": "Предметы школы и вуза",
+        "slug": "obuchenie-shkola-vuz",
+        "children": []
+      },
+      {
+        "name_ru": "Иностранные языки",
+        "slug": "obuchenie-inostrannye-yazyki",
+        "children": []
+      },
+      {
+        "name_ru": "Детское развитие, логопеды",
+        "slug": "obuchenie-detskoe-razvitie-logoped",
+        "children": []
+      },
+      {
+        "name_ru": "Профессии и бизнес",
+        "slug": "obuchenie-professii-biznes",
+        "children": []
+      },
+      {
+        "name_ru": "Творчество, хобби, спорт",
+        "slug": "obuchenie-tvorchestvo-hobby-sport",
+        "children": []
+      },
+      {
+        "name_ru": "Вождение",
+        "slug": "obuchenie-vozhdenie",
+        "children": []
+      },
+      {
+        "name_ru": "Помощь в оформлении работ",
+        "slug": "obuchenie-oformlenie-rabot",
+        "children": []
+      },
+      {
+        "name_ru": "Духовные практики",
+        "slug": "obuchenie-duhovnye-praktiki",
+        "children": []
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "obuchenie-drugoe",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Деловые услуги",
+    "slug": "delovye-uslugi",
+    "children": [
+      {
+        "name_ru": "Бухгалтерия, финансы",
+        "slug": "delovye-buhgalteriya-finansy",
+        "children": []
+      },
+      {
+        "name_ru": "Консультирование",
+        "slug": "delovye-konsultirovanie",
+        "children": []
+      },
+      {
+        "name_ru": "Консультации по недвижимости",
+        "slug": "delovye-konsultatsii-nedvizhimost",
+        "children": []
+      },
+      {
+        "name_ru": "Юридические услуги",
+        "slug": "delovye-yuridicheskie",
+        "children": []
+      },
+      {
+        "name_ru": "IT, дизайн, тексты",
+        "slug": "delovye-it-dizayn-teksty",
+        "children": []
+      },
+      {
+        "name_ru": "Маркетинг и продвижение",
+        "slug": "delovye-marketing-prodvizhenie",
+        "children": []
+      },
+      {
+        "name_ru": "Переводы и легализация",
+        "slug": "delovye-perevody-legalizatsiya",
+        "children": []
+      },
+      {
+        "name_ru": "Подбор персонала",
+        "slug": "delovye-podbor-personala",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Страхование",
+    "slug": "strahovanie-uslugi",
+    "children": [
+      {
+        "name_ru": "Авто и ОСАГО",
+        "slug": "strahovanie-avto-osago",
+        "children": []
+      },
+      {
+        "name_ru": "Имущество и жильё",
+        "slug": "strahovanie-imuschestvo",
+        "children": []
+      },
+      {
+        "name_ru": "Жизнь и здоровье",
+        "slug": "strahovanie-zhizn-zdorove",
+        "children": []
+      },
+      {
+        "name_ru": "Бизнес и ответственность",
+        "slug": "strahovanie-biznes",
+        "children": []
+      },
+      {
+        "name_ru": "Другое",
+        "slug": "strahovanie-drugoe",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Услуги посредников",
+    "slug": "uslugi-posrednikov",
+    "children": [
+      {
+        "name_ru": "Услуги выкупа",
+        "slug": "posredniki-vykup",
+        "children": []
+      },
+      {
+        "name_ru": "Поставка товаров из-за границы",
+        "slug": "posredniki-postavka-iz-granitsy",
+        "children": []
+      },
+      {
+        "name_ru": "Помощь с финансовыми вопросами",
+        "slug": "posredniki-finansy",
+        "children": []
+      },
+      {
+        "name_ru": "Туристические услуги",
+        "slug": "posredniki-turizm",
+        "children": []
+      },
+      {
+        "name_ru": "Консультации",
+        "slug": "posredniki-konsultatsii",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Полиграфия, наружная реклама",
+    "slug": "poligrafiya-naruzhnaya-reklama",
+    "children": [
+      {
+        "name_ru": "Визитки, листовки, буклеты",
+        "slug": "poligrafiya-vizitki-listovki",
+        "children": []
+      },
+      {
+        "name_ru": "Широкоформатная печать и баннеры",
+        "slug": "poligrafiya-shirokoformat",
+        "children": []
+      },
+      {
+        "name_ru": "Вывески и световые короба",
+        "slug": "poligrafiya-vyveski",
+        "children": []
+      },
+      {
+        "name_ru": "Сувенирная продукция",
+        "slug": "poligrafiya-suveniry",
+        "children": []
+      },
+      {
+        "name_ru": "Монтаж наружной рекламы",
+        "slug": "poligrafiya-montazh-naruzhka",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Вывоз мусора и вторсырья",
+    "slug": "vyvoz-musora",
+    "children": [
+      {
+        "name_ru": "Вывоз мусора",
+        "slug": "vyvoz-musora-usluga",
+        "children": []
+      },
+      {
+        "name_ru": "Приём вторсырья",
+        "slug": "priem-vtorsyrya",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Уборка",
+    "slug": "uborka",
+    "children": [
+      {
+        "name_ru": "Генеральная уборка",
+        "slug": "uborka-generalnaya",
+        "children": []
+      },
+      {
+        "name_ru": "Мойка окон",
+        "slug": "uborka-moyka-okon",
+        "children": []
+      },
+      {
+        "name_ru": "Простая уборка",
+        "slug": "uborka-prostaya",
+        "children": []
+      },
+      {
+        "name_ru": "Уборка после ремонта",
+        "slug": "uborka-posle-remonta",
+        "children": []
+      },
+      {
+        "name_ru": "Уборка офисов и коммерции",
+        "slug": "uborka-ofisy-kommercheskaya",
+        "children": []
+      },
+      {
+        "name_ru": "Чистка ковров",
+        "slug": "uborka-chistka-kovrov",
+        "children": []
+      },
+      {
+        "name_ru": "Чистка мягкой мебели",
+        "slug": "uborka-chistka-mebeli",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Дезинфекция, дезинсекция, спецуборка",
+    "slug": "dezinfektsiya-dezinsektsiya",
+    "children": [
+      {
+        "name_ru": "Дезинфекция помещений",
+        "slug": "dezinfektsiya-pomescheniya",
+        "children": []
+      },
+      {
+        "name_ru": "Дезинсекция и дератизация",
+        "slug": "dezinsektsiya-deratizatsiya",
+        "children": []
+      },
+      {
+        "name_ru": "Уничтожение запахов и плесени",
+        "slug": "dez-zapah-plesen",
+        "children": []
+      },
+      {
+        "name_ru": "Уборка после ЧС и затоплений",
+        "slug": "dez-uborka-posle-chs",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Бытовые услуги",
+    "slug": "bytovye-uslugi",
+    "children": [
+      {
+        "name_ru": "Изготовление ключей и заточка",
+        "slug": "bytovye-klyuchi-zatochka",
+        "children": []
+      },
+      {
+        "name_ru": "Пошив и ремонт одежды и других изделий",
+        "slug": "bytovye-poshiv-odezhdy",
+        "children": []
+      },
+      {
+        "name_ru": "Ремонт часов",
+        "slug": "bytovye-remont-chasov",
+        "children": []
+      },
+      {
+        "name_ru": "Химчистка, стирка",
+        "slug": "bytovye-himchistka-stirka",
+        "children": []
+      },
+      {
+        "name_ru": "Ювелирные услуги",
+        "slug": "bytovye-yuvelirnye",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Праздники, мероприятия",
+    "slug": "prazdniki-meropriyatiya",
+    "children": [
+      {
+        "name_ru": "Организация и проведение мероприятий",
+        "slug": "prazdniki-organizatsiya",
+        "children": []
+      },
+      {
+        "name_ru": "Оформление и декор",
+        "slug": "prazdniki-oformlenie-dekor",
+        "children": []
+      },
+      {
+        "name_ru": "Прокат и аренда для мероприятий",
+        "slug": "prazdniki-prokat-arenda",
+        "children": []
+      },
+      {
+        "name_ru": "Организация досуга и отдыха",
+        "slug": "prazdniki-dosug-otdyh",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Доставка продуктов, десертов, кейтеринг",
+    "slug": "dostavka-produktov",
+    "children": [
+      {
+        "name_ru": "Доставка готовой еды",
+        "slug": "dostavka-gotovoy-edy",
+        "children": []
+      },
+      {
+        "name_ru": "Торты и десерты на заказ",
+        "slug": "dostavka-torty-deserty",
+        "children": []
+      },
+      {
+        "name_ru": "Кейтеринг, официанты, повара, бармены",
+        "slug": "dostavka-keytering-personal",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Фото- и видеосъёмка",
+    "slug": "photo-video",
+    "children": [
+      {
+        "name_ru": "Фотосъёмка",
+        "slug": "photo-video-fotosyomka",
+        "children": []
+      },
+      {
+        "name_ru": "Видеосъёмка",
+        "slug": "photo-video-videosyomka",
+        "children": []
+      },
+      {
+        "name_ru": "Аренда фотостудии",
+        "slug": "photo-video-arenda-studii",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Няни, сиделки",
+    "slug": "nyani-sidelki",
+    "children": [
+      {
+        "name_ru": "Няни для детей",
+        "slug": "nyani-deti",
+        "children": []
+      },
+      {
+        "name_ru": "Сиделки и уход за пожилыми",
+        "slug": "sidelki-pozhilye",
+        "children": []
+      },
+      {
+        "name_ru": "Домработницы",
+        "slug": "nyani-domrabotnitsy",
+        "children": []
+      },
+      {
+        "name_ru": "Помощь в воспитании / репетиторство малышам",
+        "slug": "nyani-vospitanie",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Уход за животными",
+    "slug": "uhod-za-zhivotnymi",
+    "children": [
+      {
+        "name_ru": "Выгул собак",
+        "slug": "zhivotnye-vygul",
+        "children": []
+      },
+      {
+        "name_ru": "Передержка и зоогостиницы",
+        "slug": "zhivotnye-perederzhka",
+        "children": []
+      },
+      {
+        "name_ru": "Груминг и стрижка",
+        "slug": "zhivotnye-gruming",
+        "children": []
+      },
+      {
+        "name_ru": "Кинолог / дрессировка",
+        "slug": "zhivotnye-kinolog",
+        "children": []
+      },
+      {
+        "name_ru": "Ветеринар на дом",
+        "slug": "zhivotnye-vet-dom",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Искусство",
+    "slug": "iskusstvo",
+    "children": [
+      {
+        "name_ru": "Музыка, стихи, песни на заказ",
+        "slug": "iskusstvo-muzyka-stihi",
+        "children": []
+      },
+      {
+        "name_ru": "Услуги художников",
+        "slug": "iskusstvo-hudozhniki",
+        "children": []
+      },
+      {
+        "name_ru": "Кастомизация",
+        "slug": "iskusstvo-kastomizatsiya",
+        "children": []
+      },
+      {
+        "name_ru": "Рукоделие на заказ",
+        "slug": "iskusstvo-rukodelie",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Охрана, безопасность",
+    "slug": "ohrana-bezopasnost",
+    "children": [
+      {
+        "name_ru": "Охрана объектов и сопровождение",
+        "slug": "ohrana-obekty",
+        "children": []
+      },
+      {
+        "name_ru": "Видеонаблюдение и СКУД",
+        "slug": "ohrana-video-skud",
+        "children": []
+      },
+      {
+        "name_ru": "Пожарная сигнализация",
+        "slug": "ohrana-pozharnaya-signalizatsiya",
+        "children": []
+      },
+      {
+        "name_ru": "Частные охранники / сопровождение",
+        "slug": "ohrana-chastnaya",
+        "children": []
+      }
+    ]
+  },
+  {
+    "name_ru": "Другое",
+    "slug": "drugoe",
+    "children": [
+      {
+        "name_ru": "Ремонт спортинвентаря",
+        "slug": "drugoe-remont-sportinventarya",
+        "children": []
+      },
+      {
+        "name_ru": "Ремонт музыкальных инструментов",
+        "slug": "drugoe-remont-muzykalnyh",
+        "children": []
+      },
+      {
+        "name_ru": "Ритуальные услуги",
+        "slug": "drugoe-ritualnye",
+        "children": []
+      },
+      {
+        "name_ru": "Ещё услуги",
+        "slug": "drugoe-eshche-uslugi",
+        "children": []
+      }
+    ]
+  }
+]
