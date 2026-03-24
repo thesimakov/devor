@@ -3,6 +3,7 @@ from sqlalchemy import or_, text
 from sqlalchemy.orm import Session
 
 from dependencies import get_current_user, get_db
+from routers.auction import settle_auction_if_needed
 from listing_presenters import build_listing_category_meta, listing_to_out, load_images_for_listings, order_listing_boosted_first
 from models import (
     Category,
@@ -137,6 +138,10 @@ def get_listing(listing_id: int, db: Session = Depends(get_db)):
     listing = db.query(Listing).filter(Listing.id == listing_id).first()
     if not listing:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Объявление не найдено")
+
+    if listing.deadline_at is not None:
+        settle_auction_if_needed(db, listing)
+        db.refresh(listing)
 
     listing.views_count += 1
     db.commit()

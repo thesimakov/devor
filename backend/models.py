@@ -101,6 +101,13 @@ class JobWorkflowStatus(str, Enum):
     CANCELLED = "cancelled"
 
 
+class CartItemSource(str, Enum):
+    """Происхождение позиции в корзине."""
+
+    AUCTION = "auction"
+    MANUAL = "manual"
+
+
 class Section(Base):
     __tablename__ = "sections"
 
@@ -224,6 +231,16 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+    auction_bids: Mapped[list["AuctionBid"]] = relationship(
+        "AuctionBid",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+    cart_items: Mapped[list["CartItem"]] = relationship(
+        "CartItem",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
 
 
 class Listing(Base):
@@ -274,6 +291,7 @@ class Listing(Base):
         nullable=True,
         index=True,
     )
+    auction_settled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -323,6 +341,54 @@ class Listing(Base):
         back_populates="listing",
         cascade="all, delete-orphan",
     )
+    auction_bids: Mapped[list["AuctionBid"]] = relationship(
+        "AuctionBid",
+        back_populates="listing",
+        cascade="all, delete-orphan",
+    )
+    cart_items: Mapped[list["CartItem"]] = relationship(
+        "CartItem",
+        back_populates="listing",
+        cascade="all, delete-orphan",
+    )
+
+
+class AuctionBid(Base):
+    """Ставка в аукционе (листинг с deadline_at)."""
+
+    __tablename__ = "auction_bids"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    listing_id: Mapped[int] = mapped_column(ForeignKey("listings.id", ondelete="CASCADE"), nullable=False, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    amount_som: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
+
+    listing: Mapped["Listing"] = relationship("Listing", back_populates="auction_bids")
+    user: Mapped["User"] = relationship("User", back_populates="auction_bids")
+
+
+class CartItem(Base):
+    """Корзина: позиция после выигрыша аукциона или ручного добавления."""
+
+    __tablename__ = "cart_items"
+    __table_args__ = (
+        UniqueConstraint("user_id", "listing_id", name="uq_cart_user_listing"),
+        UniqueConstraint("listing_id", name="uq_cart_listing_one_row"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
+    listing_id: Mapped[int] = mapped_column(ForeignKey("listings.id", ondelete="CASCADE"), nullable=False)
+    price_som: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    source: Mapped[CartItemSource] = mapped_column(
+        _pg_native_enum(CartItemSource, "cart_item_source"),
+        nullable=False,
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
+
+    user: Mapped["User"] = relationship("User", back_populates="cart_items")
+    listing: Mapped["Listing"] = relationship("Listing", back_populates="cart_items")
 
 
 class ListingResponse(Base):

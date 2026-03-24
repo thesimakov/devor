@@ -18,6 +18,9 @@
     "loginForFavorites": "Барои илова кардан ба интихобот ба профил ворид шавед.",
     "favoritesUpdateError": "Интихоботро нав кардан муяссар нашуд",
     "ninetyNinePlus": "99+",
-    "tajikistan": "Точикистон"
+    "tajikistan": "Точикистон",
+    "close": "Пӯшидан",
+    "loading": "Бор шуда истодааст…",
+    "currencySom": "сом."
   }
 }

@@ -438,3 +438,29 @@ class VerificationDocumentOut(BaseModel):
 class VerificationDecisionRequest(BaseModel):
     status: Literal["approved", "rejected"]
     admin_note: str | None = Field(default=None, max_length=2000)
+
+
+class PlaceBidRequest(BaseModel):
+    amount_som: Decimal = Field(..., gt=0, le=Decimal("999999999"))
+
+
+class AuctionStateOut(BaseModel):
+    listing_id: int
+    deadline_at: datetime | None
+    deadline_passed: bool
+    settled: bool
+    starting_price_som: Decimal
+    current_highest_bid_som: Decimal | None
+    bid_count: int
+    min_next_bid_som: Decimal
+    can_bid: bool
+    bid_block_reason: str | None = None
+
+
+class CartItemOut(BaseModel):
+    id: int
+    listing_id: int
+    price_som: Decimal
+    source: str
+    created_at: datetime
+    listing: ListingOut

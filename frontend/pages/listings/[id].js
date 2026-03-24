@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
 import AppHeader from "../../components/AppHeader";
+import AuctionBidModal from "../../components/AuctionBidModal";
 import { useLanguage } from "../../contexts/LanguageContext";
 import ListingLocationMap from "../../components/ListingLocationMap";
 import ListingTipsBlock from "../../components/ListingTipsBlock";
@@ -12,6 +13,16 @@ import { findCategoryTrail } from "../../lib/categoryPath";
 import { buildCategoryHref } from "../../lib/categoryLinks";
 import { formatPrice } from "../../lib/i18n";
 import { fallbackCategoriesBySection, fallbackListings } from "../../lib/mockData";
+
+function formatDeadline(iso, lang) {
+  if (!iso) return "";
+  try {
+    const d = new Date(iso);
+    return d.toLocaleString(lang === "tj" ? "tg-TJ" : "ru-RU", { dateStyle: "medium", timeStyle: "short" });
+  } catch {
+    return iso;
+  }
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -105,6 +116,7 @@ export default function ListingPage() {
 
   const [listing, setListing] = useState(null);
   const [notFound, setNotFound] = useState(false);
+  const [showBidModal, setShowBidModal] = useState(false);
 
   useEffect(() => {
     if (!router.isReady || !id) return;
@@ -248,13 +260,14 @@ export default function ListingPage() {
   }
 
   return (
-    <div className="app-shell youla-app-shell">
-      <div className="page youla-page listing-page">
-        <AppHeader />
+    <>
+      <div className="app-shell youla-app-shell">
+        <div className="page youla-page listing-page">
+          <AppHeader />
 
-        <main className="listing-content listing-layout">
-          <div className="listing-left">
-            <nav className="breadcrumbs" aria-label={lang === "tj" ? "Нишонҳои роҳ" : "Хлебные крошки"}>
+          <main className="listing-content listing-layout">
+            <div className="listing-left">
+              <nav className="breadcrumbs" aria-label={lang === "tj" ? "Нишонҳои роҳ" : "Хлебные крошки"}>
               <Link href="/">{lang === "tj" ? "Саҳифаи асосӣ" : "Главная"}</Link>
               <span className="breadcrumbs-sep"> / </span>
               <Link href={`/?section=${sectionKey}`}>{listing.section_name_ru || SECTION_NAMES[sectionKey] || "Каталог"}</Link>
@@ -289,6 +302,17 @@ export default function ListingPage() {
                   {listing.is_promoted ? "Продлить продвижение" : "Поднять в топ выдачи"} — кошелёк и тарифы
                 </Link>
               </p>
+            ) : null}
+
+            {listing.deadline_at && !isOwner ? (
+              <section className="listing-auction-block" aria-label={t("auction.title")}>
+                <p className="listing-auction-deadline">
+                  <strong>{t("auction.listingDeadline")}:</strong> {formatDeadline(listing.deadline_at, lang)}
+                </p>
+                <button type="button" className="primary listing-auction-bid-open" onClick={() => setShowBidModal(true)}>
+                  {t("auction.openBid")}
+                </button>
+              </section>
             ) : null}
 
             <section className="listing-gallery-card">
@@ -427,7 +451,15 @@ export default function ListingPage() {
             />
           </div>
         ) : null}
+        </div>
       </div>
-    </div>
+      {showBidModal && listing.deadline_at ? (
+        <AuctionBidModal
+          listingId={listing.id}
+          onClose={() => setShowBidModal(false)}
+          onSuccess={() => setShowBidModal(false)}
+        />
+      ) : null}
+    </>
   );
 }

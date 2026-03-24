@@ -26,6 +26,7 @@ function toDemoListing(item) {
     updated_at: new Date().toISOString(),
     promoted_until: null,
     is_promoted: false,
+    deadline_at: null,
   };
 }
 
@@ -87,8 +88,72 @@ function offlineApi(path, options = {}) {
     throw new Error("Офлайн доступен только для демо-аккаунта: demo / demo12345");
   }
 
+  const auctionStateMatch = pathname.match(/^\/auctions\/listings\/(\d+)\/state$/);
+  if (auctionStateMatch && method === "GET") {
+    const lid = Number(auctionStateMatch[1]);
+    const min = 100;
+    const canBid = Boolean(user && getStoredToken());
+    return {
+      listing_id: lid,
+      deadline_at: new Date(Date.now() + 45 * 60 * 1000).toISOString(),
+      deadline_passed: false,
+      settled: false,
+      starting_price_som: 100,
+      current_highest_bid_som: null,
+      bid_count: 0,
+      min_next_bid_som: min,
+      can_bid: canBid,
+      bid_block_reason: canBid ? null : "Войдите, чтобы делать ставки.",
+    };
+  }
+
   if (!user) {
     throw new Error("Требуется вход в профиль");
+  }
+
+  if (pathname === "/users/me" && method === "GET") {
+    return {
+      id: user.id,
+      login: user.login,
+      phone: user.phone || null,
+      name: user.name || null,
+      role: user.role || "user",
+      created_at: new Date().toISOString(),
+      marketplace_role: null,
+      avatar_url: null,
+      rating_avg: "0",
+      verification_level: user.verification_level || "none",
+    };
+  }
+
+  if (pathname === "/billing/wallet" && method === "GET") {
+    return { balance_som: 500, demo_topup_enabled: true };
+  }
+
+  if (pathname === "/users/me/cart" && method === "GET") {
+    return [];
+  }
+
+  const auctionBidMatch = pathname.match(/^\/auctions\/listings\/(\d+)\/bid$/);
+  if (auctionBidMatch && method === "POST") {
+    const lid = Number(auctionBidMatch[1]);
+    const amt = Number(body.amount_som) || 100;
+    return {
+      listing_id: lid,
+      deadline_at: new Date(Date.now() + 45 * 60 * 1000).toISOString(),
+      deadline_passed: false,
+      settled: false,
+      starting_price_som: 100,
+      current_highest_bid_som: amt,
+      bid_count: 1,
+      min_next_bid_som: Math.round((amt + 0.01) * 100) / 100,
+      can_bid: true,
+      bid_block_reason: null,
+    };
+  }
+
+  if (pathname.match(/^\/users\/me\/cart\/\d+$/) && method === "DELETE") {
+    return null;
   }
 
   if (pathname === "/users/me/listings" && method === "GET") {
@@ -119,11 +184,15 @@ function offlineApi(path, options = {}) {
     const listingId = Number(pathname.split("/").pop());
     const listing = fallbackListings.find((item) => item.id === listingId);
     if (!listing) throw new Error("Объявление не найдено");
-    return {
+    const base = {
       ...toDemoListing(listing),
       phone: "+992 90 111 22 33",
       seller_name: "Demo Seller",
     };
+    if (listingId === 9001) {
+      base.deadline_at = new Date(Date.now() + 50 * 60 * 1000).toISOString();
+    }
+    return base;
   }
 
   if (pathname.startsWith("/chat/listings/") && pathname.endsWith("/messages")) {
@@ -249,7 +318,12 @@ export async function apiFetch(path, options = {}) {
     let detail = "Ошибка API";
     try {
       const payload = await response.json();
-      detail = payload.detail || payload.message || detail;
+      const raw = payload.detail ?? payload.message ?? detail;
+      if (Array.isArray(raw)) {
+        detail = raw.map((x) => (typeof x === "object" && x.msg ? x.msg : String(x))).join(" ");
+      } else {
+        detail = typeof raw === "string" ? raw : String(raw);
+      }
     } catch {
       // noop
     }

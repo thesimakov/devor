@@ -18,6 +18,9 @@
     "loginForFavorites": "Войдите в профиль, чтобы добавлять объявления в избранное.",
     "favoritesUpdateError": "Не удалось обновить избранное",
     "ninetyNinePlus": "99+",
-    "tajikistan": "Таджикистан"
+    "tajikistan": "Таджикистан",
+    "close": "Закрыть",
+    "loading": "Загрузка…",
+    "currencySom": "сом."
   }
 }

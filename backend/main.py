@@ -5,6 +5,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 from database import SessionLocal
 from routers.admin import router as admin_router
+from routers.auction import router as auction_router
 from routers.billing import router as billing_router
 from routers.categories import router as categories_router
 from routers.chat import router as chat_router
@@ -61,6 +62,7 @@ def on_startup():
 
 
 app.include_router(admin_router)
+app.include_router(auction_router)
 app.include_router(categories_router)
 app.include_router(listings_router)
 app.include_router(listing_responses_router)

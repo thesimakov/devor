@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { HiOutlineChatBubbleLeftRight, HiOutlineHeart, HiOutlineUser } from "react-icons/hi2";
+import {
+  HiOutlineChatBubbleLeftRight,
+  HiOutlineHeart,
+  HiOutlineShoppingBag,
+  HiOutlineUser,
+} from "react-icons/hi2";
 
 import { useLanguage } from "../contexts/LanguageContext";
 import { apiFetch } from "../lib/api";
@@ -27,6 +32,7 @@ export default function AppHeader({
   const [unreadCount, setUnreadCount] = useState(0);
   const [toast, setToast] = useState(null);
   const [walletBalance, setWalletBalance] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
   const controlled = typeof searchValue === "string" && typeof onSearchChange === "function";
   const value = controlled ? searchValue : localSearch;
 
@@ -52,6 +58,27 @@ export default function AppHeader({
       }
     }
     loadWallet();
+    return () => {
+      active = false;
+    };
+  }, [router.pathname]);
+
+  useEffect(() => {
+    let active = true;
+    async function loadCart() {
+      if (!getStoredToken()) {
+        if (active) setCartCount(0);
+        return;
+      }
+      try {
+        const items = await apiFetch("/users/me/cart");
+        if (!active) return;
+        setCartCount(Array.isArray(items) ? items.length : 0);
+      } catch {
+        if (active) setCartCount(0);
+      }
+    }
+    loadCart();
     return () => {
       active = false;
     };
@@ -206,6 +233,13 @@ export default function AppHeader({
 
             <Link href="/favorites" className="youla-icon-btn" title={t("header.favoriteTitle")} aria-label={t("header.favoriteTitle")}>
               <HiOutlineHeart className="youla-icon-svg" size={22} aria-hidden />
+            </Link>
+
+            <Link href="/cart" className="youla-icon-btn" title={t("header.cart")} aria-label={t("header.cart")}>
+              <HiOutlineShoppingBag className="youla-icon-svg" size={22} aria-hidden />
+              {cartCount > 0 ? (
+                <span className="youla-badge-mini">{cartCount > 99 ? t("common.ninetyNinePlus") : cartCount}</span>
+              ) : null}
             </Link>
 
             <Link href="/chat" className="youla-icon-btn" title={t("header.messages")} aria-label={t("header.messages")}>

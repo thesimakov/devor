@@ -7,6 +7,7 @@ import ruHome from "../locales/ru/home.json";
 import ruMap from "../locales/ru/map.json";
 import ruHow from "../locales/ru/how.json";
 import ruAccount from "../locales/ru/account.json";
+import ruAuction from "../locales/ru/auction.json";
 
 import tjCommon from "../locales/tj/common.json";
 import tjHeader from "../locales/tj/header.json";
@@ -15,10 +16,11 @@ import tjHome from "../locales/tj/home.json";
 import tjMap from "../locales/tj/map.json";
 import tjHow from "../locales/tj/how.json";
 import tjAccount from "../locales/tj/account.json";
+import tjAuction from "../locales/tj/auction.json";
 
 /** Собранные словари: модульные JSON склеены по корню. */
-const ru = deepMerge({}, ruCommon, ruHeader, ruFooter, ruHome, ruMap, ruHow, ruAccount);
-const tj = deepMerge({}, tjCommon, tjHeader, tjFooter, tjHome, tjMap, tjHow, tjAccount);
+const ru = deepMerge({}, ruCommon, ruHeader, ruFooter, ruHome, ruMap, ruHow, ruAccount, ruAuction);
+const tj = deepMerge({}, tjCommon, tjHeader, tjFooter, tjHome, tjMap, tjHow, tjAccount, tjAuction);
 
 export const dictionaries = { ru, tj };
 

@@ -18,6 +18,22 @@ def get_db():
         db.close()
 
 
+def get_optional_user(
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
+    db: Session = Depends(get_db),
+) -> User | None:
+    if not credentials:
+        return None
+    try:
+        payload = decode_access_token(credentials.credentials)
+        user_id = payload.get("sub")
+        if not user_id:
+            return None
+        return db.query(User).filter(User.id == int(user_id)).first()
+    except Exception:
+        return None
+
+
 def get_current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(security),
     db: Session = Depends(get_db),
