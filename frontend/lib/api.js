@@ -104,6 +104,8 @@ function offlineApi(path, options = {}) {
       min_next_bid_som: min,
       can_bid: canBid,
       bid_block_reason: canBid ? null : "Войдите, чтобы делать ставки.",
+      winner_user_id: null,
+      contacts_available: false,
     };
   }
 
@@ -149,6 +151,8 @@ function offlineApi(path, options = {}) {
       min_next_bid_som: Math.round((amt + 0.01) * 100) / 100,
       can_bid: true,
       bid_block_reason: null,
+      winner_user_id: null,
+      contacts_available: false,
     };
   }
 

@@ -455,6 +455,8 @@ class AuctionStateOut(BaseModel):
     min_next_bid_som: Decimal
     can_bid: bool
     bid_block_reason: str | None = None
+    winner_user_id: int | None = None
+    contacts_available: bool = True
 
 
 class CartItemOut(BaseModel):

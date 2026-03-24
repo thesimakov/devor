@@ -160,6 +160,24 @@ def _build_state(
             can_bid = True
             reason = None
 
+    winner_user_id: int | None = None
+    if settled:
+        cart_row = (
+            db.query(CartItem)
+            .filter(CartItem.listing_id == listing.id, CartItem.source == CartItemSource.AUCTION)
+            .first()
+        )
+        if cart_row:
+            winner_user_id = cart_row.user_id
+
+    contacts_available = True
+    if listing.deadline_at is not None:
+        contacts_available = False
+        if user is not None and user.id == listing.user_id:
+            contacts_available = True
+        elif winner_user_id is not None and user is not None and user.id == winner_user_id:
+            contacts_available = True
+
     return AuctionStateOut(
         listing_id=listing.id,
         deadline_at=listing.deadline_at,
@@ -171,6 +189,8 @@ def _build_state(
         min_next_bid_som=min_next,
         can_bid=can_bid,
         bid_block_reason=reason,
+        winner_user_id=winner_user_id,
+        contacts_available=contacts_available,
     )
 
 

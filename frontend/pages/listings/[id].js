@@ -4,6 +4,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 
 import AppHeader from "../../components/AppHeader";
 import AuctionBidModal from "../../components/AuctionBidModal";
+import AuctionCountdownBadge from "../../components/AuctionCountdownBadge";
 import { useLanguage } from "../../contexts/LanguageContext";
 import ListingLocationMap from "../../components/ListingLocationMap";
 import ListingTipsBlock from "../../components/ListingTipsBlock";
@@ -11,7 +12,7 @@ import { apiFetch } from "../../lib/api";
 import { getStoredToken, getStoredUser } from "../../lib/auth";
 import { findCategoryTrail } from "../../lib/categoryPath";
 import { buildCategoryHref } from "../../lib/categoryLinks";
-import { formatPrice } from "../../lib/i18n";
+import { formatPrice, t } from "../../lib/i18n";
 import { fallbackCategoriesBySection, fallbackListings } from "../../lib/mockData";
 
 function formatDeadline(iso, lang) {
@@ -117,6 +118,7 @@ export default function ListingPage() {
   const [listing, setListing] = useState(null);
   const [notFound, setNotFound] = useState(false);
   const [showBidModal, setShowBidModal] = useState(false);
+  const [auctionState, setAuctionState] = useState(null);
 
   useEffect(() => {
     if (!router.isReady || !id) return;
@@ -146,6 +148,25 @@ export default function ListingPage() {
     setIsOwner(Boolean(u && String(u.id) === String(listing.user_id)));
   }, [listing]);
 
+  useEffect(() => {
+    if (!listing?.deadline_at) {
+      setAuctionState(null);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const st = await apiFetch(`/auctions/listings/${listing.id}/state`);
+        if (!cancelled) setAuctionState(st);
+      } catch {
+        if (!cancelled) setAuctionState(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [listing?.id, listing?.deadline_at]);
+
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
@@ -173,6 +194,18 @@ export default function ListingPage() {
     "Есть ли выезд на дом?",
     "Сколько длится работа?",
   ];
+
+  const auctionEndMs = listing?.deadline_at
+    ? new Date(auctionState?.deadline_at || listing.deadline_at).getTime()
+    : 0;
+  const contactsLocked = Boolean(
+    listing?.deadline_at && !isOwner && (!auctionState || !auctionState.contacts_available)
+  );
+  const showAuctionBidButton = Boolean(
+    listing?.deadline_at &&
+      !isOwner &&
+      (!auctionState || (!auctionState.deadline_passed && !auctionState.settled))
+  );
 
   useEffect(() => {
     if (imageUrls.length <= 1 || isLightboxOpen) return undefined;
@@ -304,14 +337,29 @@ export default function ListingPage() {
               </p>
             ) : null}
 
-            {listing.deadline_at && !isOwner ? (
-              <section className="listing-auction-block" aria-label={t("auction.title")}>
-                <p className="listing-auction-deadline">
-                  <strong>{t("auction.listingDeadline")}:</strong> {formatDeadline(listing.deadline_at, lang)}
+            {listing.deadline_at ? (
+              <section className="listing-auction-timer-panel" aria-label={t(lang, "auction.timerAria")}>
+                <div className="listing-auction-timer-panel__row">
+                  <span className="listing-auction-timer-panel__label">{t(lang, "auction.untilEnd")}</span>
+                  <span className="listing-auction-timer-panel__clock">
+                    <AuctionCountdownBadge
+                      endMs={auctionEndMs}
+                      endedLabel={t(lang, "home.auctionEnded")}
+                    />
+                  </span>
+                </div>
+                <p className="listing-auction-timer-panel__deadline-line">
+                  <strong>{t(lang, "auction.listingDeadline")}:</strong> {formatDeadline(listing.deadline_at, lang)}
                 </p>
-                <button type="button" className="primary listing-auction-bid-open" onClick={() => setShowBidModal(true)}>
-                  {t("auction.openBid")}
-                </button>
+                {showAuctionBidButton ? (
+                  <button
+                    type="button"
+                    className="primary listing-auction-bid-open"
+                    onClick={() => setShowBidModal(true)}
+                  >
+                    {t(lang, "auction.openBid")}
+                  </button>
+                ) : null}
               </section>
             ) : null}
 
@@ -377,33 +425,52 @@ export default function ListingPage() {
             <ListingTipsBlock />
           </div>
 
-          <aside className="listing-side-card">
-            <div className="seller-box">
-              <div className="seller-name">{listing.seller_name || "Исполнитель"}</div>
-              <div className="seller-phone">{listing.phone}</div>
-            </div>
+          <aside
+            className={`listing-side-card${contactsLocked ? " listing-side-card--contacts-locked" : ""}`}
+          >
+            <div className="listing-side-card__content">
+              <div className="seller-box">
+                <div className="seller-name">{listing.seller_name || "Исполнитель"}</div>
+                <div className={`seller-phone${contactsLocked ? " seller-phone--masked" : ""}`}>
+                  {contactsLocked ? "••• ••• ••• •••" : listing.phone}
+                </div>
+              </div>
 
-            <a className="primary call-button side-btn" href={`tel:${normalizedPhone}`}>
-              Позвонить
-            </a>
-            <button className="ghost side-btn" type="button" onClick={writeToSeller}>
-              Написать
-            </button>
-            <button className="ghost side-btn" type="button" onClick={addToFavorites}>
-              В избранное
-            </button>
-            {message ? <p className="auth-message">{message}</p> : null}
+              <a
+                className="primary call-button side-btn"
+                href={contactsLocked ? "#" : `tel:${normalizedPhone}`}
+                tabIndex={contactsLocked ? -1 : undefined}
+                aria-disabled={contactsLocked}
+                onClick={(e) => {
+                  if (contactsLocked) e.preventDefault();
+                }}
+              >
+                Позвонить
+              </a>
+              <button className="ghost side-btn" type="button" onClick={writeToSeller} disabled={contactsLocked}>
+                Написать
+              </button>
+              <button className="ghost side-btn" type="button" onClick={addToFavorites} disabled={contactsLocked}>
+                В избранное
+              </button>
+              {message ? <p className="auth-message">{message}</p> : null}
 
-            <div className="quick-questions">
-              <h4>Спросите у исполнителя</h4>
-              <div className="questions-wrap">
-                {quickQuestions.map((question) => (
-                  <button type="button" key={question} className="question-chip">
-                    {question}
-                  </button>
-                ))}
+              <div className="quick-questions">
+                <h4>Спросите у исполнителя</h4>
+                <div className="questions-wrap">
+                  {quickQuestions.map((question) => (
+                    <button type="button" key={question} className="question-chip" disabled={contactsLocked}>
+                      {question}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
+            {contactsLocked ? (
+              <div className="listing-contacts-overlay">
+                <p>{t(lang, "auction.contactsWinnerOnly")}</p>
+              </div>
+            ) : null}
           </aside>
         </main>
 
