@@ -108,7 +108,7 @@ def admin_list_listings(
     rows = query.order_by(Listing.id.desc()).offset((page - 1) * page_size).limit(page_size).all()
     ids = [x.id for x in rows]
     images = load_images_for_listings(db, ids)
-    items = [listing_to_out(x, images) for x in rows]
+    items = [listing_to_out(x, images, db=db) for x in rows]
     return ListingsPage(items=items, total=total, page=page, page_size=page_size)
 
 
@@ -126,7 +126,7 @@ def admin_set_listing_status(
     db.commit()
     db.refresh(listing)
     images = load_images_for_listings(db, [listing.id])
-    return listing_to_out(listing, images)
+    return listing_to_out(listing, images, db=db)
 
 
 @router.get("/ops/ping")

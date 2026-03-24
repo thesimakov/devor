@@ -1,9 +1,11 @@
 from collections import defaultdict
 from datetime import datetime, timezone
+from decimal import Decimal
 
-from sqlalchemy import case
+from sqlalchemy import case, func
+from sqlalchemy.orm import Session
 
-from models import Category, Listing, ListingImage
+from models import AuctionBid, Category, Listing, ListingImage
 from schemas import CategoryCrumb, ListingOut
 
 
@@ -52,11 +54,35 @@ def listing_to_out(
     section_key: str | None = None,
     section_name_ru: str | None = None,
     category_path: list[CategoryCrumb] | None = None,
+    db: Session | None = None,
 ) -> ListingOut:
     images = images_by_listing.get(listing.id, [])
     pu = listing.promoted_until
     n = now_utc()
     is_promoted = bool(pu and pu > n)
+
+    auction_bid_count: int | None = None
+    auction_participant_count: int | None = None
+    auction_starting_price_som: Decimal | None = None
+    auction_current_price_som: Decimal | None = None
+    if db is not None and listing.deadline_at is not None:
+        from routers.auction import _auction_metrics, _starting_price
+
+        highest, bid_count, _ = _auction_metrics(db, listing)
+        start = _starting_price(listing)
+        participants = (
+            db.query(func.count(func.distinct(AuctionBid.user_id)))
+            .filter(AuctionBid.listing_id == listing.id)
+            .scalar()
+        )
+        if participants is None:
+            participants = 0
+        current: Decimal = highest if highest is not None else start
+        auction_bid_count = bid_count
+        auction_participant_count = int(participants)
+        auction_starting_price_som = start
+        auction_current_price_som = current
+
     return ListingOut(
         id=listing.id,
         title=listing.title,
@@ -88,4 +114,8 @@ def listing_to_out(
         section_key=section_key,
         section_name_ru=section_name_ru,
         category_path=category_path if category_path is not None else [],
+        auction_bid_count=auction_bid_count,
+        auction_participant_count=auction_participant_count,
+        auction_starting_price_som=auction_starting_price_som,
+        auction_current_price_som=auction_current_price_som,
     )

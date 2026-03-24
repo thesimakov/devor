@@ -151,6 +151,10 @@ class ListingOut(BaseModel):
     section_key: str | None = None
     section_name_ru: str | None = None
     category_path: list[CategoryCrumb] = Field(default_factory=list)
+    auction_bid_count: int | None = None
+    auction_participant_count: int | None = None
+    auction_starting_price_som: Decimal | None = None
+    auction_current_price_som: Decimal | None = None
 
     model_config = ConfigDict(from_attributes=True)
 

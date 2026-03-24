@@ -293,10 +293,23 @@ export default function HomePage() {
       .slice(0, 12);
 
     if (rows.length === 0 && usingFallback && stripSource.length > 0) {
-      return stripSource.slice(0, 4).map((item, i) => ({
-        item,
-        endMs: now + Math.min(59, 8 + i * 13) * 60 * 1000,
-      }));
+      return stripSource.slice(0, 4).map((item, i) => {
+        const endMs = now + Math.min(59, 8 + i * 13) * 60 * 1000;
+        const base = item.price != null ? Number(item.price) : 100;
+        const bids = 2 + i * 2;
+        const current = base + bids * 5;
+        return {
+          item: {
+            ...item,
+            deadline_at: new Date(endMs).toISOString(),
+            auction_bid_count: bids,
+            auction_participant_count: 1 + (i % 4),
+            auction_starting_price_som: base,
+            auction_current_price_som: current,
+          },
+          endMs,
+        };
+      });
     }
     return rows;
   }, [stripSource, usingFallback]);
@@ -483,41 +496,72 @@ export default function HomePage() {
             <p className="youla-auction-empty">{t("home.auctionEmpty")}</p>
           ) : (
             <div className="youla-horizontal-scroll">
-              {auctionEndingEntries.map(({ item: listing, endMs }) => (
-                <div className="youla-auction-card-wrap" key={listing.id}>
-                  <Link href={`/listings/${listing.id}`} className="youla-strip-card youla-auction-card">
-                    <div className="youla-strip-image-wrap">
-                      {listing.cover_image_url ? (
-                        <img src={toImageUrl(listing.cover_image_url)} alt="" className="youla-strip-img" />
-                      ) : (
-                        <div className="youla-strip-img youla-strip-img--placeholder">{t("common.photo")}</div>
-                      )}
-                      <span className="youla-auction-timer-badge" aria-live="polite">
-                        <AuctionCountdownBadge endMs={endMs} endedLabel={t("home.auctionEnded")} />
-                      </span>
-                      <FavoriteHeartButton
-                        listingId={listing.id}
-                        active={favoriteIds.has(listing.id)}
-                        onToggle={handleFavoriteToggle}
-                        variant="strip"
-                      />
-                    </div>
-                    <div className="youla-strip-body">
-                      <div className="youla-strip-price">
-                        {listing.price == null ? t("common.free") : formatPrice(listing.price, lang)}
+              {auctionEndingEntries.map(({ item: listing, endMs }) => {
+                const startSom =
+                  listing.auction_starting_price_som != null
+                    ? listing.auction_starting_price_som
+                    : listing.price;
+                const currentSom =
+                  listing.auction_current_price_som != null
+                    ? listing.auction_current_price_som
+                    : listing.price;
+                const bidCount = listing.auction_bid_count ?? 0;
+                const participantCount = listing.auction_participant_count ?? 0;
+                return (
+                  <div className="youla-auction-card-wrap" key={listing.id}>
+                    <Link href={`/listings/${listing.id}`} className="youla-strip-card youla-auction-card">
+                      <div className="youla-strip-image-wrap">
+                        {listing.cover_image_url ? (
+                          <img src={toImageUrl(listing.cover_image_url)} alt="" className="youla-strip-img" />
+                        ) : (
+                          <div className="youla-strip-img youla-strip-img--placeholder">{t("common.photo")}</div>
+                        )}
+                        <span className="youla-auction-timer-badge" aria-live="polite">
+                          <AuctionCountdownBadge endMs={endMs} endedLabel={t("home.auctionEnded")} />
+                        </span>
+                        <FavoriteHeartButton
+                          listingId={listing.id}
+                          active={favoriteIds.has(listing.id)}
+                          onToggle={handleFavoriteToggle}
+                          variant="strip"
+                        />
                       </div>
-                      <div className="youla-strip-title">{listing.title}</div>
-                    </div>
-                  </Link>
-                  <button
-                    type="button"
-                    className="youla-auction-bid-btn"
-                    onClick={() => setAuctionBidListingId(listing.id)}
-                  >
-                    {t("home.auctionBid")}
-                  </button>
-                </div>
-              ))}
+                      <h3 className="youla-auction-lot-title">{listing.title}</h3>
+                      <div className="youla-auction-stats">
+                        <div className="youla-auction-stat-row">
+                          <span className="youla-auction-stat-label">{t("home.auctionStatBids")}</span>
+                          <span className="youla-auction-stat-value">{bidCount}</span>
+                        </div>
+                        <div className="youla-auction-stat-row">
+                          <span className="youla-auction-stat-label">{t("home.auctionStatParticipants")}</span>
+                          <span className="youla-auction-stat-value">{participantCount}</span>
+                        </div>
+                      </div>
+                      <div className="youla-auction-prices">
+                        <div className="youla-auction-price-start">
+                          <span className="youla-auction-price-label">{t("home.auctionPriceStart")}</span>
+                          <span className="youla-auction-price-num youla-auction-price-num--small">
+                            {startSom == null ? t("common.negotiable") : formatPrice(startSom, lang)}
+                          </span>
+                        </div>
+                        <div className="youla-auction-price-now">
+                          <span className="youla-auction-price-label">{t("home.auctionPriceNow")}</span>
+                          <span className="youla-auction-price-num">
+                            {currentSom == null ? t("common.negotiable") : formatPrice(currentSom, lang)}
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                    <button
+                      type="button"
+                      className="youla-auction-bid-btn"
+                      onClick={() => setAuctionBidListingId(listing.id)}
+                    >
+                      {t("home.auctionBid")}
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           )}
         </section>

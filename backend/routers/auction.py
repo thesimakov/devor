@@ -283,7 +283,7 @@ def get_my_cart(
     images = load_images_for_listings(db, listing_ids)
     out: list[CartItemOut] = []
     for row in rows:
-        lo = listing_to_out(row.listing, images)
+        lo = listing_to_out(row.listing, images, db=db)
         out.append(
             CartItemOut(
                 id=row.id,

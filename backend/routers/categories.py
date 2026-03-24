@@ -143,7 +143,7 @@ def get_category_listings(
     images_by_listing = load_images_for_listings(db, listing_ids)
 
     return ListingsPage(
-        items=[listing_to_out(item, images_by_listing) for item in items],
+        items=[listing_to_out(item, images_by_listing, db=db) for item in items],
         total=total,
         page=page,
         page_size=page_size,

@@ -50,7 +50,7 @@ def patch_me(
 def _map_listings_with_images(db: Session, listings: list[Listing]) -> list[ListingOut]:
     listing_ids = [item.id for item in listings]
     images_by_listing = load_images_for_listings(db, listing_ids)
-    return [listing_to_out(item, images_by_listing) for item in listings]
+    return [listing_to_out(item, images_by_listing, db=db) for item in listings]
 
 
 @router.post("/auth/request-code", response_model=AuthCodeRequestResponse)

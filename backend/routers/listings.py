@@ -126,7 +126,7 @@ def get_listings(
     images_by_listing = load_images_for_listings(db, listing_ids)
 
     return ListingsPage(
-        items=[listing_to_out(item, images_by_listing) for item in items],
+        items=[listing_to_out(item, images_by_listing, db=db) for item in items],
         total=total,
         page=page,
         page_size=page_size,
@@ -150,7 +150,7 @@ def get_listing(listing_id: int, db: Session = Depends(get_db)):
     seller = db.query(User).filter(User.id == listing.user_id).first()
     images_by_listing = load_images_for_listings(db, [listing.id])
     crumbs, sk, sn = build_listing_category_meta(listing.category)
-    base = listing_to_out(listing, images_by_listing, section_key=sk, section_name_ru=sn, category_path=crumbs)
+    base = listing_to_out(listing, images_by_listing, section_key=sk, section_name_ru=sn, category_path=crumbs, db=db)
     return ListingWithContact(
         **base.model_dump(),
         phone=seller.phone if seller else "",
@@ -175,7 +175,7 @@ def create_listing(
     db.commit()
     db.refresh(listing)
     images_by_listing = load_images_for_listings(db, [listing.id])
-    return listing_to_out(listing, images_by_listing)
+    return listing_to_out(listing, images_by_listing, db=db)
 
 
 @router.put("/{listing_id}", response_model=ListingOut)
@@ -203,7 +203,7 @@ def update_listing(
     db.commit()
     db.refresh(listing)
     images_by_listing = load_images_for_listings(db, [listing.id])
-    return listing_to_out(listing, images_by_listing)
+    return listing_to_out(listing, images_by_listing, db=db)
 
 
 @router.delete("/{listing_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -274,7 +274,7 @@ def upload_listing_voice(
     db.refresh(listing)
     background_tasks.add_task(run_transcription_stub, listing.id)
     images_by_listing = load_images_for_listings(db, [listing.id])
-    return listing_to_out(listing, images_by_listing)
+    return listing_to_out(listing, images_by_listing, db=db)
 
 
 @router.post("/{listing_id}/assign-executor", response_model=ListingOut)
@@ -318,4 +318,4 @@ def assign_executor(
         f"Вас выбрали исполнителем по заявке: {listing.title}. Откройте чат в приложении.",
     )
     images_by_listing = load_images_for_listings(db, [listing.id])
-    return listing_to_out(listing, images_by_listing)
+    return listing_to_out(listing, images_by_listing, db=db)

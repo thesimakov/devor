@@ -138,4 +138,4 @@ def promote_listing(
     db.refresh(user)
 
     images = load_images_for_listings(db, [listing.id])
-    return listing_to_out(listing, images)
+    return listing_to_out(listing, images, db=db)
