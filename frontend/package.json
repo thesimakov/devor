@@ -7,6 +7,7 @@
     "dev:clear": "rm -rf .next && next dev -p 3000",
     "export:categories": "node scripts/export-services-tree.mjs",
     "build": "npm run export:categories && next build",
+    "build:static": "NEXT_STATIC_EXPORT=1 NEXT_PUBLIC_BASE_PATH=/devor npm run export:categories && NEXT_STATIC_EXPORT=1 NEXT_PUBLIC_BASE_PATH=/devor next build",
     "start": "next start -p 3000"
   },
   "dependencies": {

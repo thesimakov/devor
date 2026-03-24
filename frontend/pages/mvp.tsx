@@ -3,6 +3,7 @@
  * Tojik / рус: тексты можно вынести в locales (tj/common.json).
  */
 import Head from "next/head";
+import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { clearAuthData, setAuthData } from "../lib/auth";
 import { filterCategoryTreeToBeautyOnly, flattenCategoryNodes } from "../lib/servicesScope";
@@ -155,7 +156,7 @@ export default function MvpPage() {
         <h1 style={{ fontSize: "1.35rem" }}>Devor MVP</h1>
         <p style={{ color: "#475569", fontSize: 14 }}>
           Рус / Тоҷик: интерфейс основного сайта — в{" "}
-          <a href="/">каталоге</a>. Здесь — краткий тестовый сценарий (TypeScript).
+          <Link href="/">каталоге</Link>. Здесь — краткий тестовый сценарий (TypeScript).
         </p>
 
         <section style={{ marginTop: 20 }}>

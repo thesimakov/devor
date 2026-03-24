@@ -60,21 +60,20 @@ docker compose --profile telegram up -d telegram
 
 ## SEO / SSG
 
-Страница категории `pages/categories/[slug].js` использует SSR; для ISR переведите на `getStaticProps` с `revalidate` или на App Router с `revalidate` в `fetch` — см. документацию Next.js.
+Страницы категорий и объявлений подгружают данные с API **на клиенте**; для прод-SEO при необходимости можно вернуть серверный рендер или ISR — см. документацию Next.js.
 
-## Ошибка «index.html» / «filename case matches the URL»
+## Сервер (VPS / Docker)
 
-Такое сообщение обычно даёт **статический веб-сервер** (Nginx/Apache, S3, часть панелей хостинга), если в корне сайта **нет** `index.html` или путь не совпал с именем файла.
+1. **Обычная сборка фронта:** `cd frontend && npm ci && npm run build && npm run start` (порт 3000). Динамические маршруты (`/listings/[id]`, `/categories/[slug]`) работают через `getStaticPaths` с `fallback: blocking` без перечисления всех ID в билде.
+2. **Reverse proxy** (Caddy/Nginx) — прокси на `http://127.0.0.1:3000`.
+3. **Регистр имён** (Linux): пути и импорты — как в репозитории.
 
-**У фронта Devor это нормально:** это приложение **Next.js** на **Node.js**. Главная страница рендерится из `frontend/pages/index.js` после `next build`; отдельного `index.html` в репозитории для корня `/` **не требуется** и для режима `next start` **не создаётся** как единственный вход.
+## GitHub Pages (статический экспорт)
 
-Что сделать:
+1. Сборка: `cd frontend && npm run build:static` — папка `frontend/out` с `index.html` и `basePath` `/devor` для адреса `https://<user>.github.io/devor/`.
+2. Деплой: workflow `.github/workflows/deploy-github-pages.yml` (после первого запуска в настройках репозитория **Settings → Pages** выберите источник **GitHub Actions**).
+3. На статическом хостинге перечислены ID объявлений до `NEXT_EXPORT_LISTING_ID_MAX` (по умолчанию 1200) плюс демо-ID из mock; остальные пути могут отдать 404 до перехода на сервер с Node.
 
-1. **Запускать фронт как Node-процесс**, а не отдавать папку репозитория как статику:
-   - локально / на VPS: `cd frontend && npm ci && npm run build && npm run start` (порт 3000);
-   - или Docker: сервис `frontend` из `docker compose` (команда `npm run dev` в compose — для разработки; в продакшене лучше `npm run build && npm run start`).
-2. **Reverse proxy** (Caddy/Nginx) должен проксировать на `http://127.0.0.1:3000`, а не на `root /var/www/...` с набором `.html` файлов.
-3. **Регистр имён** (Linux): каталог `pages/`, импорты и URL в нижнем регистре — как в репозитории; на macOS ошибка может не проявляться, на сервере — да.
-4. **Статический хостинг** (только HTML без Node): штатный `output: 'export'` для этого проекта **не подходит** без доработки: у страниц каталога и объявления используется `getServerSideProps`, им нужен сервер Next или отказ от SSR в пользу клиентской загрузки данных.
+## Ошибка «index.html» на GitHub Pages
 
-Если нужен именно «плоский» сайт с `index.html` в корне — это отдельная схема сборки (другой фреймворк или сильно упрощённый фронт), не текущий `next start`.
+Если видите 404 от GitHub Pages, убедитесь, что опубликована папка **`out`** после `npm run build:static`, а не сырой репозиторий без сборки.

@@ -1,11 +1,6 @@
 /**
- * Единая сборка ссылок на страницу категории.
- * Используем query-роут `/categories?slug=...`, чтобы не ломались переходы
- * в окружениях, где динамический path может отдавать 404.
+ * Ссылки на страницу категории: `/categories/[slug]?section=...` (совместимо со статическим экспортом).
  */
 export function buildCategoryHref(slug, section = "services") {
-  return {
-    pathname: "/categories",
-    query: { slug, section },
-  };
+  return `/categories/${encodeURIComponent(slug)}?section=${encodeURIComponent(section)}`;
 }

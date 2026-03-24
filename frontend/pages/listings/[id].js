@@ -12,7 +12,6 @@ import { findCategoryTrail } from "../../lib/categoryPath";
 import { buildCategoryHref } from "../../lib/categoryLinks";
 import { formatPrice } from "../../lib/i18n";
 import { fallbackCategoriesBySection, fallbackListings } from "../../lib/mockData";
-import { getServerApiUrl } from "../../lib/serverApi";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -40,38 +39,33 @@ function normalizeListingProduct(listing) {
   };
 }
 
-export async function getServerSideProps({ params }) {
-  const { id } = params;
-  const serverApiUrl = getServerApiUrl();
+export async function getStaticPaths() {
+  if (process.env.NEXT_STATIC_EXPORT === "1") {
+    const ids = new Set();
+    const max =
+      Number(process.env.NEXT_EXPORT_LISTING_ID_MAX || process.env.NEXT_STATIC_LISTING_ID_MAX || "1200") || 1200;
+    for (let i = 1; i <= max; i++) ids.add(String(i));
+    for (const item of fallbackListings) ids.add(String(item.id));
+    return {
+      paths: [...ids].map((id) => ({ params: { id } })),
+      fallback: false,
+    };
+  }
+  return { paths: [], fallback: "blocking" };
+}
+
+export async function getStaticProps() {
+  return { props: {} };
+}
+
+async function fetchListingById(id) {
   try {
-    const res = await fetch(`${serverApiUrl}/listings/${id}`);
+    const res = await fetch(`${API_URL}/listings/${id}`);
     if (!res.ok) {
       const fallback = fallbackListings.find((item) => String(item.id) === String(id));
-      if (!fallback) return { notFound: true };
+      if (!fallback) return { notFound: true, listing: null };
       return {
-        props: {
-          listing: normalizeListingProduct({
-            ...fallback,
-            phone: "+992 90 111 22 33",
-            image_urls: fallback.cover_image_url ? [fallback.cover_image_url] : [],
-            seller_name: "Demo Seller",
-            is_promoted: false,
-            promoted_until: null,
-            user_id: fallback.user_id ?? 1,
-          }),
-        },
-      };
-    }
-
-    const listing = await res.json();
-    return { props: { listing: normalizeListingProduct(listing) } };
-  } catch {
-    const fallback = fallbackListings.find((item) => String(item.id) === String(id));
-    if (!fallback) {
-      return { notFound: true };
-    }
-    return {
-      props: {
+        notFound: false,
         listing: normalizeListingProduct({
           ...fallback,
           phone: "+992 90 111 22 33",
@@ -81,31 +75,77 @@ export async function getServerSideProps({ params }) {
           promoted_until: null,
           user_id: fallback.user_id ?? 1,
         }),
-      },
+      };
+    }
+    const listing = await res.json();
+    return { notFound: false, listing: normalizeListingProduct(listing) };
+  } catch {
+    const fallback = fallbackListings.find((item) => String(item.id) === String(id));
+    if (!fallback) return { notFound: true, listing: null };
+    return {
+      notFound: false,
+      listing: normalizeListingProduct({
+        ...fallback,
+        phone: "+992 90 111 22 33",
+        image_urls: fallback.cover_image_url ? [fallback.cover_image_url] : [],
+        seller_name: "Demo Seller",
+        is_promoted: false,
+        promoted_until: null,
+        user_id: fallback.user_id ?? 1,
+      }),
     };
   }
 }
 
-export default function ListingPage({ listing }) {
-  const { lang } = useLanguage();
+export default function ListingPage() {
   const router = useRouter();
+  const { lang } = useLanguage();
+  const rawId = router.query.id;
+  const id = typeof rawId === "string" ? rawId : "";
+
+  const [listing, setListing] = useState(null);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    if (!router.isReady || !id) return;
+    let cancelled = false;
+    (async () => {
+      const result = await fetchListingById(id);
+      if (cancelled) return;
+      if (result.notFound) {
+        setNotFound(true);
+        setListing(null);
+      } else {
+        setNotFound(false);
+        setListing(result.listing);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router.isReady, id]);
+
   const [message, setMessage] = useState("");
   const [isOwner, setIsOwner] = useState(false);
 
   useEffect(() => {
+    if (!listing) return;
     const u = getStoredUser();
     setIsOwner(Boolean(u && String(u.id) === String(listing.user_id)));
-  }, [listing.user_id]);
+  }, [listing]);
+
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const normalizedPhone = (listing.phone || "").replace(/\s/g, "");
+
+  const normalizedPhone = (listing?.phone || "").replace(/\s/g, "");
   const imageUrls = useMemo(
-    () => (listing.image_urls || []).map((url) => (url.startsWith("http") ? url : `${API_URL}${url}`)),
-    [listing.image_urls]
+    () =>
+      (listing?.image_urls || []).map((url) => (url.startsWith("http") ? url : `${API_URL}${url}`)),
+    [listing]
   );
   const mainImage = imageUrls[selectedImageIndex] || imageUrls[0] || "";
-  const sectionKey = listing.section_key || "services";
-  const categoryPath = listing.category_path || [];
+  const sectionKey = listing?.section_key || "services";
+  const categoryPath = listing?.category_path || [];
   const categoryLine = useMemo(
     () =>
       categoryPath.length
@@ -154,6 +194,7 @@ export default function ListingPage({ listing }) {
   }
 
   async function addToFavorites() {
+    if (!listing) return;
     if (!getStoredToken()) {
       setMessage("Сначала войдите по логину и паролю");
       return;
@@ -167,11 +208,43 @@ export default function ListingPage({ listing }) {
   }
 
   function writeToSeller() {
+    if (!listing) return;
     if (!getStoredToken()) {
       setMessage("Сначала войдите по логину и паролю");
       return;
     }
     router.push(`/chat/${listing.id}?participant=${listing.user_id}`);
+  }
+
+  if (!router.isReady || !id) {
+    return null;
+  }
+
+  if (notFound) {
+    return (
+      <div className="app-shell youla-app-shell">
+        <div className="page youla-page listing-page">
+          <AppHeader />
+          <main className="listing-content" style={{ padding: "2rem" }}>
+            <p>Объявление не найдено.</p>
+            <Link href="/">На главную</Link>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
+  if (!listing) {
+    return (
+      <div className="app-shell youla-app-shell">
+        <div className="page youla-page listing-page">
+          <AppHeader />
+          <main className="listing-content" style={{ padding: "2rem" }}>
+            <p>Загрузка…</p>
+          </main>
+        </div>
+      </div>
+    );
   }
 
   return (

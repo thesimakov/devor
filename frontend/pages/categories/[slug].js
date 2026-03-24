@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { HiOutlineMapPin, HiOutlineStar, HiOutlineTrophy } from "react-icons/hi2";
 
@@ -9,22 +10,13 @@ import { CONTENT_IMAGES } from "../../lib/contentAssets";
 import { findCategoryTrail } from "../../lib/categoryPath";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { formatIntegerGrouped, formatPrice, formatPriceFrom } from "../../lib/i18n";
+import { getAllCategorySlugs } from "../../lib/categoryStaticPaths";
 import { fallbackCategoriesBySection, fallbackListings } from "../../lib/mockData";
-import { getServerApiUrl } from "../../lib/serverApi";
 import { CategoryStripIcon } from "../../lib/CategoryStripIcon";
 import { BEAUTY_PARENT_SLUG, BEAUTY_SUBCATEGORIES } from "../../lib/beautyCategoryLanding";
 import { buildCategoryHref } from "../../lib/categoryLinks";
 import { SERVICES_BEAUTY_ONLY, isCategoryRouteAllowed } from "../../lib/servicesScope";
 import { applyBeautyPostFilters, BEAUTY_FILTER_DEFAULTS, isBeautyServicesSlug } from "../../lib/beautySubcategoryFilters";
-
-/** Кэш объявлений с SSR для офлайн-фильтрации при недоступном API. */
-function useSeedSync(slug, sectionKey, initialPage) {
-  const seedListingsRef = useRef(initialPage.items || []);
-  useEffect(() => {
-    seedListingsRef.current = initialPage.items || [];
-  }, [slug, sectionKey, initialPage]);
-  return seedListingsRef;
-}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 const PAGE_SIZE = 12;
@@ -37,75 +29,18 @@ const CATALOG_SECTION_TITLES = {
   transport: { ru: "Транспорт", tj: "Нақлиёт" },
 };
 
-export async function getServerSideProps({ params, query }) {
-  const { slug } = params;
-  if (SERVICES_BEAUTY_ONLY && !isCategoryRouteAllowed(slug)) {
+export async function getStaticPaths() {
+  if (process.env.NEXT_STATIC_EXPORT === "1") {
     return {
-      redirect: { destination: "/categories/krasota", permanent: false },
+      paths: getAllCategorySlugs().map((s) => ({ params: { slug: s } })),
+      fallback: false,
     };
   }
-  const sectionFromQuery = query.section || "services";
-  const serverApiUrl = getServerApiUrl();
+  return { paths: [], fallback: "blocking" };
+}
 
-  let payload = { items: [], total: 0, page: 1, page_size: PAGE_SIZE };
-  let categoryName = slug.replaceAll("-", " ");
-
-  function findCategoryName(tree, targetSlug) {
-    for (const node of tree || []) {
-      if (node.slug === targetSlug) return node.name_ru;
-      const fromChild = findCategoryName(node.children || [], targetSlug);
-      if (fromChild) return fromChild;
-    }
-    return null;
-  }
-
-  try {
-    const categoriesRes = await fetch(`${serverApiUrl}/categories?section=${sectionFromQuery}`);
-    if (categoriesRes.ok) {
-      const categoriesPayload = await categoriesRes.json();
-      const found = findCategoryName(categoriesPayload, slug);
-      if (found) categoryName = found;
-    }
-
-    const listingsRes = await fetch(
-      `${serverApiUrl}/categories/${slug}/listings?section=${sectionFromQuery}&include_subcategories=true&page=1&page_size=${PAGE_SIZE}`
-    );
-    if (listingsRes.ok) {
-      payload = await listingsRes.json();
-    } else {
-      const items = fallbackListings
-        .filter((item) => item.section === sectionFromQuery && item.category_slug === slug)
-        .map((item) => ({
-          ...item,
-          image_urls: item.cover_image_url ? [item.cover_image_url] : [],
-          views_count: 0,
-          created_at: new Date().toISOString(),
-        }));
-      payload = { items, total: items.length, page: 1, page_size: PAGE_SIZE };
-    }
-  } catch {
-    const fallbackCategoryName = findCategoryName(fallbackCategoriesBySection[sectionFromQuery] || [], slug);
-    if (fallbackCategoryName) categoryName = fallbackCategoryName;
-
-    const items = fallbackListings
-      .filter((item) => item.section === sectionFromQuery && item.category_slug === slug)
-      .map((item) => ({
-        ...item,
-        image_urls: item.cover_image_url ? [item.cover_image_url] : [],
-        views_count: 0,
-        created_at: new Date().toISOString(),
-      }));
-    payload = { items, total: items.length, page: 1, page_size: PAGE_SIZE };
-  }
-
-  return {
-    props: {
-      slug,
-      sectionKey: sectionFromQuery,
-      categoryName,
-      initialPage: payload,
-    },
-  };
+export async function getStaticProps() {
+  return { props: {} };
 }
 
 const DEFAULT_CATEGORY_FILTERS = {
@@ -205,12 +140,19 @@ function clientSortList(items, sortBy, sortOrder) {
   });
 }
 
-export default function CategoryPage({ slug, sectionKey, categoryName, initialPage }) {
-  const { lang } = useLanguage();
-  const seedListingsRef = useSeedSync(slug, sectionKey, initialPage);
+export default function CategoryPage() {
+  const router = useRouter();
+  const slug = typeof router.query.slug === "string" ? router.query.slug : "";
+  const sectionRaw = router.query.section;
+  const sectionKey =
+    typeof sectionRaw === "string" && sectionRaw.trim() ? sectionRaw.trim() : "services";
 
-  const [listings, setListings] = useState(initialPage.items || []);
-  const [total, setTotal] = useState(initialPage.total ?? (initialPage.items || []).length);
+  const { lang } = useLanguage();
+  const [resolvedCategoryName, setResolvedCategoryName] = useState("");
+  const offlineSeedRef = useRef([]);
+
+  const [listings, setListings] = useState([]);
+  const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [offlineMode, setOfflineMode] = useState(false);
@@ -236,12 +178,54 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
     if (last) {
       return lang === "tj" ? last.name_tj || last.name_ru : last.name_ru;
     }
-    return categoryName || slug.replaceAll("-", " ");
-  }, [categoryTrail, categoryName, slug, lang]);
+    return resolvedCategoryName || slug.replaceAll("-", " ");
+  }, [categoryTrail, resolvedCategoryName, slug, lang]);
+
+  useEffect(() => {
+    if (!router.isReady || !slug) return;
+    if (SERVICES_BEAUTY_ONLY && !isCategoryRouteAllowed(slug)) {
+      router.replace("/categories/krasota?section=services");
+    }
+  }, [router, router.isReady, slug]);
+
+  useEffect(() => {
+    if (!slug || !sectionKey) return;
+    let cancelled = false;
+    function findCategoryName(tree, targetSlug) {
+      for (const node of tree || []) {
+        if (node.slug === targetSlug) return node.name_ru;
+        const fromChild = findCategoryName(node.children || [], targetSlug);
+        if (fromChild) return fromChild;
+      }
+      return null;
+    }
+    (async () => {
+      try {
+        const categoriesRes = await fetch(`${API_URL}/categories?section=${sectionKey}`);
+        if (categoriesRes.ok && !cancelled) {
+          const categoriesPayload = await categoriesRes.json();
+          const found = findCategoryName(categoriesPayload, slug);
+          if (found) setResolvedCategoryName(found);
+        }
+      } catch {
+        const fallbackCategoryName = findCategoryName(fallbackCategoriesBySection[sectionKey] || [], slug);
+        if (fallbackCategoryName && !cancelled) setResolvedCategoryName(fallbackCategoryName);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [slug, sectionKey]);
 
   useEffect(() => {
     setHeroBroken(false);
   }, [slug]);
+
+  useEffect(() => {
+    if (!offlineMode && page === 1 && isFiltersPristine(applied) && listings.length) {
+      offlineSeedRef.current = [...listings];
+    }
+  }, [offlineMode, page, applied, listings, slug, sectionKey]);
   const sellerNames = ["Ирина", "Фаррух", "Мунира", "Алишер", "Ситора", "Рустам"];
 
   const toImageUrl = useCallback(
@@ -253,6 +237,7 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
   appliedRef.current = applied;
 
   useEffect(() => {
+    if (!router.isReady || !slug) return;
     let cancelled = false;
     async function run() {
       setLoading(true);
@@ -291,6 +276,7 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
       cancelled = true;
     };
   }, [
+    router.isReady,
     slug,
     sectionKey,
     page,
@@ -307,7 +293,18 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
   useEffect(() => {
     if (!offlineMode) return;
     const a = applied;
-    let data = clientFilterList(seedListingsRef.current, {
+    const seed =
+      offlineSeedRef.current.length > 0
+        ? offlineSeedRef.current
+        : fallbackListings
+            .filter((item) => item.section === sectionKey && item.category_slug === slug)
+            .map((item) => ({
+              ...item,
+              image_urls: item.cover_image_url ? [item.cover_image_url] : [],
+              views_count: 0,
+              created_at: new Date().toISOString(),
+            }));
+    let data = clientFilterList(seed, {
       city: a.city,
       priceFrom: a.priceFrom,
       priceTo: a.priceTo,
@@ -394,6 +391,10 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
       cover_image_url: item.cover_image_url ? toImageUrl(item.cover_image_url) : "",
     }));
   }, [listings, offlineMode, applied, toImageUrl, showBeautyFilters]);
+
+  if (!router.isReady || !slug) {
+    return null;
+  }
 
   return (
     <div className="app-shell youla-app-shell">

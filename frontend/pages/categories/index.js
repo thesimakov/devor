@@ -1,29 +1,22 @@
-import CategoryPage, { getServerSideProps as getCategoryServerSideProps } from "./[slug]";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 /**
- * Query-роут для категорий: /categories?slug=...&section=...
- * Нужен как стабильная точка входа для всех ссылок категорий и подкатегорий.
+ * Раньше: query `/categories?slug=...`. Редирект на `/categories/[slug]` для статического экспорта.
  */
-export async function getServerSideProps(ctx) {
-  const slugRaw = ctx?.query?.slug;
-  const slug = typeof slugRaw === "string" ? slugRaw.trim() : "";
-  const sectionRaw = ctx?.query?.section;
-  const section = typeof sectionRaw === "string" && sectionRaw.trim() ? sectionRaw.trim() : "services";
-
-  if (!slug) {
-    return {
-      redirect: {
-        destination: `/?section=${section}#youla-categories`,
-        permanent: false,
-      },
-    };
-  }
-
-  return getCategoryServerSideProps({
-    ...ctx,
-    params: { ...(ctx.params || {}), slug },
-    query: { ...(ctx.query || {}), section },
-  });
+export default function CategoriesIndexRedirect() {
+  const router = useRouter();
+  useEffect(() => {
+    if (!router.isReady) return;
+    const slug = typeof router.query.slug === "string" ? router.query.slug.trim() : "";
+    const sectionRaw = router.query.section;
+    const section =
+      typeof sectionRaw === "string" && sectionRaw.trim() ? sectionRaw.trim() : "services";
+    if (slug) {
+      router.replace(`/categories/${encodeURIComponent(slug)}?section=${encodeURIComponent(section)}`);
+    } else {
+      router.replace(`/?section=${encodeURIComponent(section)}#youla-categories`);
+    }
+  }, [router, router.isReady, router.query.slug, router.query.section]);
+  return null;
 }
-
-export default CategoryPage;
