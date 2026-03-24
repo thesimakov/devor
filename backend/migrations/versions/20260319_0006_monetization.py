@@ -29,7 +29,6 @@ def upgrade() -> None:
     op.create_index("ix_listings_promoted_until", "listings", ["promoted_until"], unique=False)
 
     billing_kind = sa.Enum("topup_demo", "promotion", name="billing_ledger_kind")
-    billing_kind.create(op.get_bind(), checkfirst=True)
 
     op.create_table(
         "billing_ledger",

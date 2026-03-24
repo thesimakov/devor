@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { HiOutlineMapPin, HiOutlineStar, HiOutlineTrophy } from "react-icons/hi2";
 
 import AppHeader from "../../components/AppHeader";
 import BeautyCategoryFilterPanel from "../../components/BeautyCategoryFilterPanel";
@@ -7,9 +8,10 @@ import ListingsMapPreview from "../../components/ListingsMapPreview";
 import { CONTENT_IMAGES } from "../../lib/contentAssets";
 import { findCategoryTrail } from "../../lib/categoryPath";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { formatPrice, formatPriceFrom } from "../../lib/i18n";
+import { formatIntegerGrouped, formatPrice, formatPriceFrom } from "../../lib/i18n";
 import { fallbackCategoriesBySection, fallbackListings } from "../../lib/mockData";
 import { getServerApiUrl } from "../../lib/serverApi";
+import { CategoryStripIcon } from "../../lib/CategoryStripIcon";
 import { BEAUTY_PARENT_SLUG, BEAUTY_SUBCATEGORIES } from "../../lib/beautyCategoryLanding";
 import { buildCategoryHref } from "../../lib/categoryLinks";
 import { SERVICES_BEAUTY_ONLY, isCategoryRouteAllowed } from "../../lib/servicesScope";
@@ -496,7 +498,7 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
                       </span>
                     </span>
                     <span className="beauty-landing-card-icon" aria-hidden>
-                      {c.icon}
+                      <CategoryStripIcon slug={c.slug} size={26} />
                     </span>
                   </Link>
                 ))}
@@ -550,8 +552,8 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
                           : `Показать больше ${Math.floor(total / 1000)} тыс. объявлений`
                         : total > 0
                           ? lang === "tj"
-                            ? `Намоиш додани ${total.toLocaleString("ru-RU")} эълон`
-                            : `Показать ${total.toLocaleString("ru-RU")} объявлений`
+                            ? `Намоиш додани ${formatIntegerGrouped(total)} эълон`
+                            : `Показать ${formatIntegerGrouped(total)} объявлений`
                           : lang === "tj"
                             ? "Намоиши эълонҳо"
                             : "Показать объявления"}
@@ -566,7 +568,8 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
                       });
                     }}
                   >
-                    <span aria-hidden>📍</span> {lang === "tj" ? "Дар харита" : "На карте"}
+                    <HiOutlineMapPin className="beauty-map-btn-icon" size={18} aria-hidden />{" "}
+                    {lang === "tj" ? "Дар харита" : "На карте"}
                   </button>
                 </div>
               </div>
@@ -610,7 +613,7 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
 
                     <div className="cat-filter-reliable-card">
                       <div className="cat-filter-reliable-icon" aria-hidden>
-                        🏅
+                        <HiOutlineTrophy size={22} />
                       </div>
                       <div className="cat-filter-reliable-text">
                         <div className="cat-filter-reliable-title">{lang === "tj" ? "Иҷрокунандаи боэътимод" : "Надёжный исполнитель"}</div>
@@ -783,8 +786,8 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
                       : "Загрузка…"
                     : total > 0
                       ? lang === "tj"
-                        ? `Намоиш додани ${total.toLocaleString("ru-RU")} эълонҳо`
-                        : `Показать ${total.toLocaleString("ru-RU")} объявлений`
+                        ? `Намоиш додани ${formatIntegerGrouped(total)} эълонҳо`
+                        : `Показать ${formatIntegerGrouped(total)} объявлений`
                       : lang === "tj"
                         ? "Эълонҳоро нишон диҳед"
                         : "Показать объявления"}
@@ -886,7 +889,10 @@ export default function CategoryPage({ slug, sectionKey, categoryName, initialPa
                     </div>
                     <div className="avito-card-right preview-seller-card">
                       <div className="preview-seller-name">{sellerNames[listing.id % sellerNames.length]}</div>
-                      <div className="preview-seller-rating">⭐ 5,0 · {12 + (listing.id % 15)} {lang === "tj" ? "шарҳҳо" : "отзывов"}</div>
+                      <div className="preview-seller-rating">
+                        <HiOutlineStar className="preview-rating-star" size={16} aria-hidden /> 5,0 ·{" "}
+                        {12 + (listing.id % 15)} {lang === "tj" ? "шарҳҳо" : "отзывов"}
+                      </div>
                       <div className="preview-seller-badges">
                         <span>{lang === "tj" ? "Иҷрокунандаи боэътимод" : "Надежный исполнитель"}</span>
                         <span>{lang === "tj" ? "Ҳуҷҷатҳо санҷида шудаанд" : "Документы проверены"}</span>

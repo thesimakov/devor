@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { HiOutlineMicrophone, HiStop } from "react-icons/hi2";
 
 /**
  * Запись голоса через MediaRecorder (WebM/Opus в Chrome).
@@ -142,11 +143,13 @@ export default function VoiceRecorder({ onRecorded, onTranscript, disabled = fal
     <div className={`voice-recorder ${className}`.trim()}>
       <div className="voice-recorder-row">
         {!recording ? (
-          <button type="button" className="ghost voice-btn" onClick={startRecording} disabled={disabled}>
+          <button type="button" className="ghost voice-btn voice-btn--with-icon" onClick={startRecording} disabled={disabled}>
+            <HiOutlineMicrophone className="voice-btn-icon" size={20} aria-hidden />
             Записать голосовое
           </button>
         ) : (
-          <button type="button" className="primary voice-btn" onClick={stopRecording}>
+          <button type="button" className="primary voice-btn voice-btn--with-icon" onClick={stopRecording}>
+            <HiStop className="voice-btn-icon" size={20} aria-hidden />
             Остановить ({seconds} сек)
           </button>
         )}

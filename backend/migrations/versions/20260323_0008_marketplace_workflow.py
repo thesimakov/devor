@@ -15,14 +15,17 @@ depends_on = None
 
 
 def upgrade() -> None:
+    # add_column не создаёт ENUM в PG — типы создаём явно; create_type=False, чтобы ALTER не дублировал CREATE TYPE
     bind = op.get_bind()
-    marketplace_role = sa.Enum("customer", "executor", name="marketplace_role")
+    marketplace_role = sa.Enum("customer", "executor", name="marketplace_role", create_type=False)
+    verification_level = sa.Enum("none", "phone", "extended", name="verification_level", create_type=False)
+    listing_kind = sa.Enum("offer", "request", name="listing_kind", create_type=False)
+    job_workflow_status = sa.Enum(
+        "active", "in_progress", "completed", "cancelled", name="job_workflow_status", create_type=False
+    )
     marketplace_role.create(bind, checkfirst=True)
-    verification_level = sa.Enum("none", "phone", "extended", name="verification_level")
     verification_level.create(bind, checkfirst=True)
-    listing_kind = sa.Enum("offer", "request", name="listing_kind")
     listing_kind.create(bind, checkfirst=True)
-    job_workflow_status = sa.Enum("active", "in_progress", "completed", "cancelled", name="job_workflow_status")
     job_workflow_status.create(bind, checkfirst=True)
 
     op.add_column("users", sa.Column("marketplace_role", marketplace_role, nullable=True))

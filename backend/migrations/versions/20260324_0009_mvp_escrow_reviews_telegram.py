@@ -15,8 +15,6 @@ depends_on = None
 
 
 def upgrade() -> None:
-    bind = op.get_bind()
-
     escrow_status = sa.Enum(
         "awaiting_payment",
         "funded",
@@ -25,16 +23,14 @@ def upgrade() -> None:
         "refunded",
         name="escrow_status",
     )
-    escrow_status.create(bind, checkfirst=True)
 
-    transcription_status = sa.Enum("pending", "processing", "done", "failed", "skipped", name="transcription_status")
-    transcription_status.create(bind, checkfirst=True)
+    transcription_status = sa.Enum(
+        "pending", "processing", "done", "failed", "skipped", name="transcription_status", create_type=False
+    )
 
     verification_doc_kind = sa.Enum("passport", "selfie", name="verification_doc_kind")
-    verification_doc_kind.create(bind, checkfirst=True)
 
     verification_doc_status = sa.Enum("pending", "approved", "rejected", name="verification_doc_status")
-    verification_doc_status.create(bind, checkfirst=True)
 
     # PostgreSQL: новые значения billing_ledger_kind (идемпотентно)
     for val in ("escrow_hold", "escrow_release", "escrow_refund"):
@@ -44,6 +40,9 @@ def upgrade() -> None:
             pass
 
     op.add_column("users", sa.Column("telegram_username", sa.String(length=64), nullable=True))
+
+    bind = op.get_bind()
+    transcription_status.create(bind, checkfirst=True)
 
     op.add_column(
         "listings",

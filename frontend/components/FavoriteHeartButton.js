@@ -1,8 +1,11 @@
 /**
- * Кнопка «избранное»: SVG-сердце, по клику не всплывает переход по родительской ссылке.
+ * Кнопка «избранное»: Heroicons 2 (outline / solid), по клику не всплывает переход по родительской ссылке.
  */
+import { HiHeart, HiOutlineHeart } from "react-icons/hi2";
+
 export default function FavoriteHeartButton({ listingId, active, onToggle, variant = "strip" }) {
   const grid = variant === "grid";
+  const Icon = active ? HiHeart : HiOutlineHeart;
 
   return (
     <button
@@ -13,12 +16,7 @@ export default function FavoriteHeartButton({ listingId, active, onToggle, varia
       data-listing-id={listingId}
       onClick={(e) => onToggle(listingId, e)}
     >
-      <svg className="favorite-heart-svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden focusable="false">
-        <path
-          className="favorite-heart-path"
-          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-        />
-      </svg>
+      <Icon className="favorite-heart-icon" size={22} aria-hidden focusable="false" />
     </button>
   );
 }

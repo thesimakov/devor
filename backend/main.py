@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from database import Base, SessionLocal, engine
+from database import SessionLocal
 from routers.admin import router as admin_router
 from routers.billing import router as billing_router
 from routers.categories import router as categories_router
@@ -53,7 +53,7 @@ def health_check():
 
 @app.on_event("startup")
 def on_startup():
-    Base.metadata.create_all(bind=engine)
+    # Схема только через Alembic (create_all конфликтует с миграциями и ENUM в PostgreSQL)
     with SessionLocal() as db:
         seed_categories(db)
         seed_staff_users(db)

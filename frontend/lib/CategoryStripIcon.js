@@ -1,43 +1,40 @@
 /**
- * Иконки полосы категорий на главной: Material Design (react-icons/md), привязка по slug.
- * Эмодзи и старый массив CATEGORY_ICONS по индексу не используются — иначе метки и картинки расходятся.
+ * Иконки категорий: Heroicons 2 outline (react-icons/hi2) — единый стиль с шапкой и кнопками.
  */
 import {
-  MdAutoAwesome,
-  MdBolt,
-  MdBrush,
-  MdChair,
-  MdContentCut,
-  MdFace,
-  MdFormatPaint,
-  MdHealing,
-  MdMoreHoriz,
-  MdPalette,
-  MdRemoveRedEye,
-  MdScience,
-  MdSpa,
-  MdCategory,
-} from "react-icons/md";
+  HiOutlineFaceSmile,
+  HiOutlineSparkles,
+  HiOutlineSwatch,
+  HiOutlineScissors,
+  HiOutlineEye,
+  HiOutlinePaintBrush,
+  HiOutlineBeaker,
+  HiOutlineBolt,
+  HiOutlineSun,
+  HiOutlinePencilSquare,
+  HiOutlineBuildingOffice2,
+  HiOutlineEllipsisHorizontal,
+  HiOutlineSquares2X2,
+} from "react-icons/hi2";
 
-/** slug → компонент иконки (Material Icons). */
 const SLUG_TO_ICON = {
-  krasota: MdFace,
-  "beauty-spa-massazh": MdSpa,
-  "beauty-manikyur-pedikyur": MdPalette,
-  "beauty-parikmaherskie-uslugi": MdContentCut,
-  "beauty-resnitsy-brovi": MdRemoveRedEye,
-  "beauty-permanentnyy-makiyazh": MdBrush,
-  "beauty-kosmetologiya": MdScience,
-  "beauty-epilyatsiya": MdBolt,
-  "beauty-makiyazh": MdAutoAwesome,
-  "beauty-tatu-pirsing": MdFormatPaint,
-  "beauty-arenda-rabochego-mesta": MdChair,
-  "beauty-drugoe": MdMoreHoriz,
+  krasota: HiOutlineFaceSmile,
+  "beauty-spa-massazh": HiOutlineSparkles,
+  "beauty-manikyur-pedikyur": HiOutlineSwatch,
+  "beauty-parikmaherskie-uslugi": HiOutlineScissors,
+  "beauty-resnitsy-brovi": HiOutlineEye,
+  "beauty-permanentnyy-makiyazh": HiOutlinePaintBrush,
+  "beauty-kosmetologiya": HiOutlineBeaker,
+  "beauty-epilyatsiya": HiOutlineBolt,
+  "beauty-makiyazh": HiOutlineSun,
+  "beauty-tatu-pirsing": HiOutlinePencilSquare,
+  "beauty-arenda-rabochego-mesta": HiOutlineBuildingOffice2,
+  "beauty-drugoe": HiOutlineEllipsisHorizontal,
 };
 
 export function getCategoryStripIcon(slug) {
-  if (typeof slug !== "string") return MdCategory;
-  return SLUG_TO_ICON[slug] || MdCategory;
+  if (typeof slug !== "string") return HiOutlineSquares2X2;
+  return SLUG_TO_ICON[slug] || HiOutlineSquares2X2;
 }
 
 /**

@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { HiOutlineTrophy } from "react-icons/hi2";
+
 import { BEAUTY_PARENT_SLUG } from "../lib/beautyCategoryLanding";
 import { buildCategoryHref } from "../lib/categoryLinks";
 import { getBeautyServiceOptions } from "../lib/beautySubcategoryFilters";
@@ -134,7 +136,7 @@ export default function BeautyCategoryFilterPanel({ draft, updateDraft, slug, pr
 
       <div className="cat-filter-reliable-card">
         <div className="cat-filter-reliable-icon" aria-hidden>
-          🏅
+          <HiOutlineTrophy size={22} />
         </div>
         <div className="cat-filter-reliable-text">
           <div className="cat-filter-reliable-title">{isTj ? "Иҷрокунандаи боэътимод" : "Надёжный исполнитель"}</div>

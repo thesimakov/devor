@@ -18,6 +18,11 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from database import Base
 
 
+def _pg_native_enum(py_enum: type[Enum], pg_name: str) -> SAEnum:
+    """В PostgreSQL метки ENUM в нижнем регистре (миграции); SQLAlchemy иначе шлёт имена членов (ADMIN)."""
+    return SAEnum(py_enum, name=pg_name, values_callable=lambda e: [m.value for m in e])
+
+
 class UserRole(str, Enum):
     USER = "user"
     MANAGER = "manager"
@@ -142,11 +147,11 @@ class User(Base):
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     phone: Mapped[str | None] = mapped_column(String(20), unique=True, nullable=True, index=True)
     name: Mapped[str | None] = mapped_column(String(255), nullable=True)
-    role: Mapped[UserRole] = mapped_column(SAEnum(UserRole, name="user_role"), default=UserRole.USER, nullable=False)
+    role: Mapped[UserRole] = mapped_column(_pg_native_enum(UserRole, "user_role"), default=UserRole.USER, nullable=False)
     balance_som: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False, default=Decimal("0"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
     marketplace_role: Mapped[MarketplaceRole | None] = mapped_column(
-        SAEnum(MarketplaceRole, name="marketplace_role"),
+        _pg_native_enum(MarketplaceRole, "marketplace_role"),
         nullable=True,
     )
     avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
@@ -154,7 +159,7 @@ class User(Base):
     telegram_chat_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
     telegram_username: Mapped[str | None] = mapped_column(String(64), nullable=True)
     verification_level: Mapped[VerificationLevel] = mapped_column(
-        SAEnum(VerificationLevel, name="verification_level"),
+        _pg_native_enum(VerificationLevel, "verification_level"),
         nullable=False,
         default=VerificationLevel.NONE,
     )
@@ -233,19 +238,19 @@ class Listing(Base):
     city: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
     views_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     status: Mapped[ListingStatus] = mapped_column(
-        SAEnum(ListingStatus, name="listing_status"),
+        _pg_native_enum(ListingStatus, "listing_status"),
         nullable=False,
         default=ListingStatus.ACTIVE,
     )
     promoted_until: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)
     kind: Mapped[ListingKind] = mapped_column(
-        SAEnum(ListingKind, name="listing_kind"),
+        _pg_native_enum(ListingKind, "listing_kind"),
         nullable=False,
         default=ListingKind.OFFER,
         index=True,
     )
     workflow_status: Mapped[JobWorkflowStatus] = mapped_column(
-        SAEnum(JobWorkflowStatus, name="job_workflow_status"),
+        _pg_native_enum(JobWorkflowStatus, "job_workflow_status"),
         nullable=False,
         default=JobWorkflowStatus.ACTIVE,
         index=True,
@@ -259,7 +264,7 @@ class Listing(Base):
     voice_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     voice_transcript: Mapped[str | None] = mapped_column(Text, nullable=True)
     transcription_status: Mapped[TranscriptionStatus] = mapped_column(
-        SAEnum(TranscriptionStatus, name="transcription_status"),
+        _pg_native_enum(TranscriptionStatus, "transcription_status"),
         nullable=False,
         default=TranscriptionStatus.SKIPPED,
         index=True,
@@ -385,7 +390,9 @@ class BillingLedger(Base):
     listing_id: Mapped[int | None] = mapped_column(ForeignKey("listings.id", ondelete="SET NULL"), nullable=True, index=True)
     delta_som: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     balance_after_som: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
-    kind: Mapped[BillingLedgerKind] = mapped_column(SAEnum(BillingLedgerKind, name="billing_ledger_kind"), nullable=False)
+    kind: Mapped[BillingLedgerKind] = mapped_column(
+        _pg_native_enum(BillingLedgerKind, "billing_ledger_kind"), nullable=False
+    )
     note: Mapped[str] = mapped_column(String(500), nullable=False, default="")
     package_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
@@ -405,7 +412,9 @@ class EscrowTransaction(Base):
     customer_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     executor_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
     amount_som: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
-    status: Mapped[EscrowStatus] = mapped_column(SAEnum(EscrowStatus, name="escrow_status"), nullable=False, index=True)
+    status: Mapped[EscrowStatus] = mapped_column(
+        _pg_native_enum(EscrowStatus, "escrow_status"), nullable=False, index=True
+    )
     payment_ref: Mapped[str | None] = mapped_column(String(128), nullable=True, index=True)
     dispute_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     dispute_opened_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
@@ -465,10 +474,12 @@ class VerificationDocument(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True)
-    kind: Mapped[VerificationDocKind] = mapped_column(SAEnum(VerificationDocKind, name="verification_doc_kind"), nullable=False)
+    kind: Mapped[VerificationDocKind] = mapped_column(
+        _pg_native_enum(VerificationDocKind, "verification_doc_kind"), nullable=False
+    )
     file_url: Mapped[str] = mapped_column(String(500), nullable=False)
     status: Mapped[VerificationDocStatus] = mapped_column(
-        SAEnum(VerificationDocStatus, name="verification_doc_status"),
+        _pg_native_enum(VerificationDocStatus, "verification_doc_status"),
         nullable=False,
         default=VerificationDocStatus.PENDING,
         index=True,

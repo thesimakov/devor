@@ -9,4 +9,6 @@ python-multipart==0.0.9
 httpx==0.27.2
 boto3==1.35.24
 passlib[bcrypt]==1.7.4
+# bcrypt 4.1+ ломает passlib 1.7.4 (__about__, проверки длины пароля)
+bcrypt==4.0.1
 python-telegram-bot==21.6

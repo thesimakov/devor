@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { HiOutlineChatBubbleLeftRight, HiOutlineHeart, HiOutlineUser } from "react-icons/hi2";
 
 import { useLanguage } from "../contexts/LanguageContext";
 import { apiFetch } from "../lib/api";
 import { getStoredToken } from "../lib/auth";
-import { CITY_KEYS, cityLabel } from "../lib/i18n";
+import { CITY_KEYS, cityLabel, formatIntegerGrouped } from "../lib/i18n";
 
 export default function AppHeader({
   searchValue,
@@ -138,7 +139,7 @@ export default function AppHeader({
           </Link>
           <Link href="/wallet" className="youla-sub-link youla-sub-link--wallet" title={t("header.walletTitle")}>
             {walletBalance != null
-              ? `${t("header.balancePrefix")} ${Number(walletBalance).toLocaleString(lang === "tj" ? "tg-TJ" : "ru-RU", { maximumFractionDigits: 0 })} ${t("common.currencyWallet")}`
+              ? `${t("header.balancePrefix")} ${formatIntegerGrouped(Number(walletBalance))} ${t("common.currencyWallet")}`
               : t("header.wallet")}
           </Link>
           <span className="youla-sub-muted">{t("common.tajikistan")}</span>
@@ -204,45 +205,18 @@ export default function AppHeader({
             </select>
 
             <Link href="/favorites" className="youla-icon-btn" title={t("header.favoriteTitle")} aria-label={t("header.favoriteTitle")}>
-              <svg className="youla-icon-svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden>
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                />
-              </svg>
+              <HiOutlineHeart className="youla-icon-svg" size={22} aria-hidden />
             </Link>
 
             <Link href="/chat" className="youla-icon-btn" title={t("header.messages")} aria-label={t("header.messages")}>
-              <svg className="youla-icon-svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden>
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"
-                />
-              </svg>
+              <HiOutlineChatBubbleLeftRight className="youla-icon-svg" size={22} aria-hidden />
               {unreadCount > 0 ? (
                 <span className="youla-badge-mini">{unreadCount > 99 ? t("common.ninetyNinePlus") : unreadCount}</span>
               ) : null}
             </Link>
 
             <Link href="/profile" className="youla-icon-btn youla-icon-btn--profile" aria-label={t("header.profile")} title={t("header.profileTitle")}>
-              <svg className="youla-icon-svg" viewBox="0 0 24 24" width="22" height="22" aria-hidden>
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
-                />
-              </svg>
+              <HiOutlineUser className="youla-icon-svg" size={22} aria-hidden />
             </Link>
           </div>
         </header>

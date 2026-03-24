@@ -78,7 +78,36 @@ export function getLocale(lang = "ru") {
   return locales[lang] || locales.ru;
 }
 
-const numberLocale = (lang) => (lang === "tj" ? "tg-TJ" : "ru-RU");
+/**
+ * Группировка разрядов с неразрывным пробелом — одинаково в Node (SSR) и в браузере.
+ * @param {unknown} value
+ */
+export function formatIntegerGrouped(value) {
+  const n = Math.trunc(Number(value));
+  if (!Number.isFinite(n)) return "0";
+  const neg = n < 0;
+  const digits = String(Math.abs(n));
+  const grouped = digits.replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0");
+  return neg ? `-${grouped}` : grouped;
+}
+
+/**
+ * Сумма с десятичной запятой (до 2 знаков), без Intl — стабильная гидратация.
+ * @param {unknown} value
+ */
+export function formatAmountRuTj(value) {
+  const x = Number(value);
+  if (!Number.isFinite(x)) return "0";
+  const neg = x < 0;
+  const abs = Math.abs(x);
+  const [intRaw, fracRaw] = abs.toFixed(2).split(".");
+  const intGrouped = intRaw.replace(/\B(?=(\d{3})+(?!\d))/g, "\u00a0");
+  if (fracRaw === "00") {
+    return neg ? `-${intGrouped}` : intGrouped;
+  }
+  const frac = fracRaw.replace(/0+$/, "") || "0";
+  return neg ? `-${intGrouped},${frac}` : `${intGrouped},${frac}`;
+}
 
 /**
  * @param {unknown} price
@@ -88,7 +117,7 @@ export function formatPrice(price, lang = "ru") {
   if (price === null || price === undefined || price === "") {
     return t(lang, "common.negotiable");
   }
-  const num = new Intl.NumberFormat(numberLocale(lang)).format(Number(price));
+  const num = formatAmountRuTj(Number(price));
   return `${num} ${t(lang, "common.currencyShort")}`;
 }
 
@@ -101,7 +130,7 @@ export function formatPriceFrom(price, lang = "ru") {
   if (price === null || price === undefined || price === "") {
     return t(lang, "common.negotiable");
   }
-  const num = new Intl.NumberFormat(numberLocale(lang)).format(Number(price));
+  const num = formatAmountRuTj(Number(price));
   return `${t(lang, "common.from")} ${num} ${t(lang, "common.currencyShort")}`;
 }
 

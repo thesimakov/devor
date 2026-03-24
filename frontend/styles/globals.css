@@ -771,6 +771,7 @@ a {
   font-size: 22px;
   background: linear-gradient(145deg, #ede9fe, #ddd6fe);
   flex-shrink: 0;
+  color: #5b21b6;
 }
 
 .cat-filter-reliable-title {
@@ -1568,9 +1569,17 @@ a {
 }
 
 .preview-seller-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   margin-top: 4px;
   color: #0f172a;
   font-size: 14px;
+}
+
+.preview-rating-star {
+  flex-shrink: 0;
+  color: #ca8a04;
 }
 
 .preview-seller-badges {
@@ -1906,6 +1915,7 @@ a {
 .youla-icon-btn .youla-icon-svg {
   display: block;
   flex-shrink: 0;
+  color: #334155;
 }
 
 .youla-icon-btn--profile {
@@ -2474,22 +2484,15 @@ a {
   transform: scale(0.94);
 }
 
-/* SVG-сердце в кнопке избранного */
-.favorite-heart-btn .favorite-heart-svg {
+/* Heroicons heart в кнопке избранного */
+.favorite-heart-btn .favorite-heart-icon {
   display: block;
+  color: #f43f5e;
+  transition: color 0.22s ease, transform 0.22s ease;
 }
 
-.favorite-heart-btn .favorite-heart-path {
-  fill: none;
-  stroke: #f43f5e;
-  stroke-width: 1.65;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: fill 0.22s ease, stroke 0.22s ease, transform 0.22s ease;
-}
-
-.favorite-heart-btn:hover .favorite-heart-path {
-  stroke: #e11d48;
+.favorite-heart-btn:hover .favorite-heart-icon {
+  color: #e11d48;
 }
 
 .favorite-heart-btn.favorite-heart-btn--active {
@@ -2497,10 +2500,8 @@ a {
   box-shadow: 0 2px 12px rgba(244, 63, 94, 0.28), 0 0 0 1px rgba(244, 63, 94, 0.35);
 }
 
-.favorite-heart-btn.favorite-heart-btn--active .favorite-heart-path {
-  fill: #f43f5e;
-  stroke: #e11d48;
-  stroke-width: 1.35;
+.favorite-heart-btn.favorite-heart-btn--active .favorite-heart-icon {
+  color: #e11d48;
   transform-origin: center;
   animation: favorite-heart-pop 0.38s ease;
 }
@@ -4173,7 +4174,8 @@ a {
 .chat-empty-illustration {
   width: 96px;
   height: 96px;
-  opacity: 0.85;
+  opacity: 0.55;
+  color: #94a3b8;
   animation: floatSoft 4.5s ease-in-out infinite;
 }
 
@@ -5024,11 +5026,19 @@ a {
 }
 
 .beauty-landing-card-icon {
-  font-size: 28px;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
   flex-shrink: 0;
   align-self: center;
+  color: #475569;
   opacity: 0.95;
+}
+
+.beauty-map-btn-icon {
+  flex-shrink: 0;
+  opacity: 0.88;
 }
 
 .beauty-landing-card--all {
@@ -5166,9 +5176,15 @@ a {
 }
 
 .listing-tips-icon {
-  font-size: 22px;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
   flex-shrink: 0;
+}
+
+.listing-tips-icon-svg {
+  color: #64748b;
 }
 
 .listing-tips-item strong {
@@ -6235,6 +6251,16 @@ a {
 
 .voice-recorder-row {
   margin: 12px 0 4px;
+}
+
+.voice-btn--with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.voice-btn-icon {
+  flex-shrink: 0;
 }
 
 .transcript-preview textarea {

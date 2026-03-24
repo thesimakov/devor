@@ -5,16 +5,15 @@ import { useCallback, useEffect, useState } from "react";
 import AppHeader from "../components/AppHeader";
 import AuthPhoneForm from "../components/AuthPhoneForm";
 import { apiFetch } from "../lib/api";
+import { formatAmountRuTj } from "../lib/i18n";
 
 function formatSom(n) {
   if (n == null || Number.isNaN(Number(n))) return "—";
-  return `${Number(n).toLocaleString("ru-RU", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} сом.`;
+  return `${formatAmountRuTj(Number(n))} сом.`;
 }
 
 export default function WalletPage() {
   const router = useRouter();
-  const listingPrefill =
-    router.query.listing && Number.isFinite(Number(router.query.listing)) ? Number(router.query.listing) : null;
 
   const [authed, setAuthed] = useState(false);
   const [balance, setBalance] = useState(null);
@@ -24,7 +23,8 @@ export default function WalletPage() {
   const [ledger, setLedger] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedListing, setSelectedListing] = useState(listingPrefill || "");
+  /** Пустая строка до router.isReady — иначе SSR и первый клиентский рендер расходятся по ?listing= */
+  const [selectedListing, setSelectedListing] = useState("");
   const [myListings, setMyListings] = useState([]);
 
   const refresh = useCallback(async () => {
@@ -56,8 +56,11 @@ export default function WalletPage() {
   }, [authed, refresh]);
 
   useEffect(() => {
-    if (listingPrefill) setSelectedListing(listingPrefill);
-  }, [listingPrefill]);
+    if (!router.isReady) return;
+    const raw = router.query.listing;
+    const v = Array.isArray(raw) ? raw[0] : raw;
+    if (v != null && v !== "" && Number.isFinite(Number(v))) setSelectedListing(Number(v));
+  }, [router.isReady, router.query.listing]);
 
   async function onTopup(amount) {
     setMessage("");

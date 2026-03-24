@@ -1,9 +1,23 @@
+import { HiOutlineChatBubbleLeftRight, HiOutlineMapPin, HiOutlineShieldCheck } from "react-icons/hi2";
+
 import { CONTENT_IMAGES } from "../lib/contentAssets";
 
 const TIPS = [
-  { icon: "🛡️", title: "Проверяйте контакты", text: "Уточняйте детали в чате или по телефону до встречи." },
-  { icon: "📍", title: "Договоритесь о месте", text: "Обсудите адрес или выезд, если это услуга на дому." },
-  { icon: "💬", title: "Сохраняйте переписку", text: "Важные условия лучше подтвердить письменно в чате." },
+  {
+    Icon: HiOutlineShieldCheck,
+    title: "Проверяйте контакты",
+    text: "Уточняйте детали в чате или по телефону до встречи.",
+  },
+  {
+    Icon: HiOutlineMapPin,
+    title: "Договоритесь о месте",
+    text: "Обсудите адрес или выезд, если это услуга на дому.",
+  },
+  {
+    Icon: HiOutlineChatBubbleLeftRight,
+    title: "Сохраняйте переписку",
+    text: "Важные условия лучше подтвердить письменно в чате.",
+  },
 ];
 
 export default function ListingTipsBlock() {
@@ -17,7 +31,7 @@ export default function ListingTipsBlock() {
             {TIPS.map((t) => (
               <li key={t.title} className="listing-tips-item">
                 <span className="listing-tips-icon" aria-hidden>
-                  {t.icon}
+                  <t.Icon className="listing-tips-icon-svg" size={22} />
                 </span>
                 <div>
                   <strong>{t.title}</strong>

@@ -21,8 +21,8 @@ listing_status = sa.Enum("active", "archived", "moderated", name="listing_status
 
 
 def upgrade() -> None:
-    user_role.create(op.get_bind(), checkfirst=True)
-    listing_status.create(op.get_bind(), checkfirst=True)
+    # Не вызывать .create() отдельно: SQLAlchemy создаст тип при первом create_table с колонкой ENUM.
+    # Иначе PG получает два CREATE TYPE (explicit + перед create_table).
 
     op.create_table(
         "categories",

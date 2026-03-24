@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { HiOutlineChatBubbleLeftRight } from "react-icons/hi2";
 
 import AppHeader from "../../components/AppHeader";
 import AuthPhoneForm from "../../components/AuthPhoneForm";
@@ -262,11 +263,7 @@ export default function ChatByListingPage() {
                   ) : null}
                   {!messages.length ? (
                     <div className="chat-empty-block">
-                      <img
-                        src="https://www.svgrepo.com/show/530350/chat.svg"
-                        alt="Иллюстрация чата"
-                        className="chat-empty-illustration"
-                      />
+                      <HiOutlineChatBubbleLeftRight className="chat-empty-illustration" size={96} aria-hidden />
                       <p className="empty-tip">Сообщений пока нет. Начните диалог первым.</p>
                     </div>
                   ) : null}
