@@ -2379,6 +2379,90 @@ a {
   animation: skeletonWave 1.2s ease-in-out infinite;
 }
 
+/* Аукцион (дедлайн < 1 ч) */
+.youla-auction-section {
+  background: linear-gradient(180deg, #fffbeb 0%, #ffffff 48%);
+  border-radius: 16px;
+  padding: 18px 16px;
+  border: 1px solid #fde68a;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.08);
+}
+
+.youla-auction-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.youla-auction-head-text {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.youla-auction-add-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: #fff;
+  border: none;
+  box-shadow: 0 2px 10px rgba(15, 118, 110, 0.28);
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.youla-auction-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(15, 118, 110, 0.38);
+}
+
+.youla-auction-add-btn:active {
+  transform: translateY(0);
+}
+
+.youla-auction-empty {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #78716c;
+}
+
+.youla-auction-timer-badge {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  z-index: 2;
+  min-width: 3.25rem;
+  text-align: center;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(180, 83, 9, 0.22);
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.youla-auction-timer--ended {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.youla-auction-card .youla-fav-btn {
+  z-index: 2;
+}
+
 /* Horizontal strip */
 .youla-strip-section {
   background: #fff;

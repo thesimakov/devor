@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import AppHeader from "../components/AppHeader";
+import AuctionCountdownBadge from "../components/AuctionCountdownBadge";
 import FavoriteHeartButton from "../components/FavoriteHeartButton";
 import HowItWorksYoula from "../components/HowItWorksYoula";
 import ListingsMapPreview from "../components/ListingsMapPreview";
@@ -272,6 +273,32 @@ export default function HomePage() {
     return sorted.slice(0, 12);
   }, [stripSource]);
 
+  /** Аукцион: дедлайн (deadline_at) в ближайший час; в демо — искусственные дедлайны на fallback. */
+  const auctionEndingEntries = useMemo(() => {
+    const now = Date.now();
+    const hourMs = 60 * 60 * 1000;
+    const rows = stripSource
+      .map((item) => {
+        let endMs = null;
+        if (item.deadline_at) {
+          const t = new Date(item.deadline_at).getTime();
+          if (!Number.isNaN(t)) endMs = t;
+        }
+        return { item, endMs };
+      })
+      .filter(({ endMs }) => endMs != null && endMs > now && endMs - now < hourMs)
+      .sort((a, b) => a.endMs - b.endMs)
+      .slice(0, 12);
+
+    if (rows.length === 0 && usingFallback && stripSource.length > 0) {
+      return stripSource.slice(0, 4).map((item, i) => ({
+        item,
+        endMs: now + Math.min(59, 8 + i * 13) * 60 * 1000,
+      }));
+    }
+    return rows;
+  }, [stripSource, usingFallback]);
+
   function buildFallbackPage() {
     let sectionItems = fallbackListings.filter((item) => item.section === effectiveSection);
     if (SERVICES_BEAUTY_ONLY) sectionItems = filterMockListingsBeautyOnly(sectionItems);
@@ -437,6 +464,50 @@ export default function HomePage() {
               })
             )}
           </div>
+        </section>
+
+        <section className="youla-section youla-auction-section" aria-label={t("home.auctionAria")}>
+          <div className="youla-auction-head">
+            <div className="youla-auction-head-text">
+              <h2 className="youla-section-title">{t("home.auctionTitle")}</h2>
+              <p className="youla-section-subtitle">{t("home.auctionSub")}</p>
+            </div>
+            <Link href="/create-listing" className="youla-auction-add-btn">
+              {t("home.auctionAdd")}
+            </Link>
+          </div>
+          {auctionEndingEntries.length === 0 ? (
+            <p className="youla-auction-empty">{t("home.auctionEmpty")}</p>
+          ) : (
+            <div className="youla-horizontal-scroll">
+              {auctionEndingEntries.map(({ item: listing, endMs }) => (
+                <Link href={`/listings/${listing.id}`} key={listing.id} className="youla-strip-card youla-auction-card">
+                  <div className="youla-strip-image-wrap">
+                    {listing.cover_image_url ? (
+                      <img src={toImageUrl(listing.cover_image_url)} alt="" className="youla-strip-img" />
+                    ) : (
+                      <div className="youla-strip-img youla-strip-img--placeholder">{t("common.photo")}</div>
+                    )}
+                    <span className="youla-auction-timer-badge" aria-live="polite">
+                      <AuctionCountdownBadge endMs={endMs} endedLabel={t("home.auctionEnded")} />
+                    </span>
+                    <FavoriteHeartButton
+                      listingId={listing.id}
+                      active={favoriteIds.has(listing.id)}
+                      onToggle={handleFavoriteToggle}
+                      variant="strip"
+                    />
+                  </div>
+                  <div className="youla-strip-body">
+                    <div className="youla-strip-price">
+                      {listing.price == null ? t("common.free") : formatPrice(listing.price, lang)}
+                    </div>
+                    <div className="youla-strip-title">{listing.title}</div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </section>
 
         {bargainItems.length > 0 ? (
