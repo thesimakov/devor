@@ -3,10 +3,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import AppHeader from "../components/AppHeader";
 import AuthPhoneForm from "../components/AuthPhoneForm";
+import PageIntroBanner from "../components/PageIntroBanner";
 import SceneIllustration from "../components/SceneIllustration";
 import { apiFetch } from "../lib/api";
 import { clearAuthData, getStoredUser } from "../lib/auth";
 import { CONTENT_IMAGES } from "../lib/contentAssets";
+import { useLanguage } from "../contexts/LanguageContext";
 
 function formatTime(value) {
   try {
@@ -22,6 +24,7 @@ function formatTime(value) {
 }
 
 export default function ProfilePage() {
+  const { t } = useLanguage();
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -234,7 +237,15 @@ export default function ProfilePage() {
               </section>
             </>
           ) : (
-            <p>Войдите, чтобы открыть профиль.</p>
+            <div className="favorites-guest">
+              <PageIntroBanner
+                title={t("header.profileTitle")}
+                subtitle={t("account.profileGuestSubtitle")}
+                imageUrl={CONTENT_IMAGES.profile}
+                imageAlt=""
+              />
+              <p className="favorites-guest-tip">{t("account.profileGuestTip")}</p>
+            </div>
           )}
           {message ? <p className="auth-message">{message}</p> : null}
         </main>

@@ -5,7 +5,9 @@ import AppHeader from "../components/AppHeader";
 import { useLanguage } from "../contexts/LanguageContext";
 import AuthPhoneForm from "../components/AuthPhoneForm";
 import SceneIllustration from "../components/SceneIllustration";
+import PageIntroBanner from "../components/PageIntroBanner";
 import { apiFetch, withApiPrefix } from "../lib/api";
+import { CONTENT_IMAGES } from "../lib/contentAssets";
 import { formatPrice } from "../lib/i18n";
 
 export default function MyListingsPage() {
@@ -174,7 +176,15 @@ export default function MyListingsPage() {
               ) : null}
             </>
           ) : (
-            <p>{t("account.loginToSeeListings")}</p>
+            <div className="favorites-guest">
+              <PageIntroBanner
+                title={t("account.myListingsTitle")}
+                subtitle={t("account.myListingsSubtitle")}
+                imageUrl={CONTENT_IMAGES.publish}
+                imageAlt=""
+              />
+              <p className="favorites-guest-tip">{t("account.loginToSeeListings")}</p>
+            </div>
           )}
           {message ? <p>{message}</p> : null}
         </main>

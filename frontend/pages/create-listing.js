@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 
 import AppHeader from "../components/AppHeader";
 import AuthPhoneForm from "../components/AuthPhoneForm";
-import VoiceRecorder from "../components/VoiceRecorder";
 import { CONTENT_IMAGES } from "../lib/contentAssets";
 import { apiFetch, getApiUrl } from "../lib/api";
 import { fallbackCategoriesBySection } from "../lib/mockData";
@@ -20,12 +20,8 @@ function flattenCategories(items, result = [], prefix = "") {
   return result;
 }
 
-function blobToFile(blob, mime) {
-  const ext = mime.includes("webm") ? "webm" : mime.includes("mpeg") ? "mp3" : "webm";
-  return new File([blob], `voice.${ext}`, { type: mime });
-}
-
 export default function CreateListingPage() {
+  const router = useRouter();
   const [authed, setAuthed] = useState(false);
   const [categories, setCategories] = useState([]);
   const [message, setMessage] = useState("");
@@ -38,17 +34,27 @@ export default function CreateListingPage() {
   const [files, setFiles] = useState([]);
   /** offer — услуга исполнителя; request — заявка заказчика (ТЗ). */
   const [kind, setKind] = useState("offer");
+  const [auctionMode, setAuctionMode] = useState(false);
   const [addressLine, setAddressLine] = useState("");
   const [deadlineAt, setDeadlineAt] = useState("");
   const [budgetMin, setBudgetMin] = useState("");
   const [budgetMax, setBudgetMax] = useState("");
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
-  const [voiceBlob, setVoiceBlob] = useState(null);
-  const [voiceMime, setVoiceMime] = useState("audio/webm");
-  const [voiceTranscript, setVoiceTranscript] = useState("");
 
   const categoryOptions = useMemo(() => flattenCategories(categories), [categories]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const raw = router.query?.auction;
+    const enabled = raw === "1" || raw === "true";
+    if (enabled) {
+      setAuctionMode(true);
+      setKind("offer");
+    } else {
+      setAuctionMode(false);
+    }
+  }, [router.isReady]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     async function loadCategories() {
@@ -104,6 +110,22 @@ export default function CreateListingPage() {
       setMessage("Выберите категорию");
       return;
     }
+    if (auctionMode) {
+      const parsedPrice = Number(price);
+      if (!price || Number.isNaN(parsedPrice) || parsedPrice <= 0) {
+        setMessage("Для аукциона укажите стартовую цену больше 0");
+        return;
+      }
+      const dl = deadlineAt ? new Date(deadlineAt) : null;
+      if (!dl || Number.isNaN(dl.getTime())) {
+        setMessage("Выберите окончание аукциона");
+        return;
+      }
+      if (dl.getTime() <= Date.now()) {
+        setMessage("Окончание аукциона должно быть в будущем");
+        return;
+      }
+    }
     setLoading(true);
     setMessage("");
     try {
@@ -121,7 +143,6 @@ export default function CreateListingPage() {
         budget_max: kind === "request" && budgetMax ? Number(budgetMax) : null,
         latitude: lat ? Number(lat) : null,
         longitude: lng ? Number(lng) : null,
-        voice_transcript: voiceTranscript.trim() || null,
       };
 
       const listing = await apiFetch("/listings", {
@@ -138,15 +159,6 @@ export default function CreateListingPage() {
         });
       }
 
-      if (voiceBlob) {
-        const body = new FormData();
-        body.append("file", blobToFile(voiceBlob, voiceMime));
-        await apiFetch(`/listings/${listing.id}/voice`, {
-          method: "POST",
-          body,
-        });
-      }
-
       setMessage(`Объявление #${listing.id} создано`);
       setTitle("");
       setDescription("");
@@ -154,12 +166,12 @@ export default function CreateListingPage() {
       setFiles([]);
       setAddressLine("");
       setDeadlineAt("");
+      setAuctionMode(false);
+      setKind("offer");
       setBudgetMin("");
       setBudgetMax("");
       setLat("");
       setLng("");
-      setVoiceBlob(null);
-      setVoiceTranscript("");
     } catch (error) {
       setMessage(error.message);
     } finally {
@@ -167,8 +179,9 @@ export default function CreateListingPage() {
     }
   }
 
-  const heroSubtitle =
-    kind === "request"
+  const heroSubtitle = auctionMode
+    ? "Укажите стартовую цену и окончание аукциона — после дедлайна лот попадёт в корзину победителя."
+    : kind === "request"
       ? "Опишите задачу, бюджет и срок — исполнители увидят заявку в ленте и смогут откликнуться."
       : "Заполните форму, добавьте фото и получите отклики от клиентов.";
 
@@ -181,7 +194,7 @@ export default function CreateListingPage() {
           <section className="hero-card listing-hero listing-hero-split">
             <div className="listing-hero-copy">
               <div className="breadcrumbs">Главная / Подача объявления</div>
-              <h1>Разместить объявление</h1>
+              <h1>{auctionMode ? "Разместить лот в аукцион" : "Разместить объявление"}</h1>
               <p>{heroSubtitle}</p>
               <div className="listing-hero-points">
                 <span className="tag-soft">1. Авторизуйтесь</span>
@@ -214,22 +227,41 @@ export default function CreateListingPage() {
                   <div className="kind-toggle">
                     <button
                       type="button"
-                      className={kind === "offer" ? "primary kind-pill" : "ghost kind-pill"}
-                      onClick={() => setKind("offer")}
+                      className={!auctionMode && kind === "offer" ? "primary kind-pill" : "ghost kind-pill"}
+                      onClick={() => {
+                        setAuctionMode(false);
+                        setKind("offer");
+                        setDeadlineAt("");
+                      }}
                     >
                       Услуга (исполнитель)
                     </button>
                     <button
                       type="button"
-                      className={kind === "request" ? "primary kind-pill" : "ghost kind-pill"}
-                      onClick={() => setKind("request")}
+                      className={!auctionMode && kind === "request" ? "primary kind-pill" : "ghost kind-pill"}
+                      onClick={() => {
+                        setAuctionMode(false);
+                        setKind("request");
+                        setDeadlineAt("");
+                      }}
                     >
                       Заявка (заказчик)
                     </button>
+                    <button
+                      type="button"
+                      className={auctionMode ? "primary kind-pill" : "ghost kind-pill"}
+                      onClick={() => {
+                        setAuctionMode(true);
+                        setKind("offer");
+                        setDeadlineAt("");
+                      }}
+                    >
+                      Аукцион (лот)
+                    </button>
                   </div>
                   <p className="file-note">
-                    Заявка — когда нужен мастер; услуга — когда вы предлагаете работу. Позже подключится эскроу и чат по
-                    сделке.
+                    Заявка — когда нужен мастер; услуга — когда вы предлагаете работу.
+                    Аукцион — это лот с дедлайном и стартовой ценой: после окончания время покупателю попадёт лот в корзину.
                   </p>
                 </div>
               </div>
@@ -274,13 +306,14 @@ export default function CreateListingPage() {
               <div className="form-grid">
                 {kind === "offer" ? (
                   <div>
-                    <label className="filter-label">Цена (смн)</label>
+                      <label className="filter-label">{auctionMode ? "Стартовая цена (смн)" : "Цена (смн)"}</label>
                     <input
                       type="number"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      placeholder="Оставьте пустым, если договорная"
+                        placeholder={auctionMode ? "Например 500" : "Оставьте пустым, если договорная"}
                     />
+                      {auctionMode ? <p className="file-note" style={{ marginTop: 6 }}>Для аукциона нужна стартовая цена &gt; 0.</p> : null}
                   </div>
                 ) : (
                   <>
@@ -316,11 +349,16 @@ export default function CreateListingPage() {
                 </div>
               </div>
 
-              {kind === "request" ? (
+              {kind === "request" || auctionMode ? (
                 <div className="form-grid">
                   <div>
-                    <label className="filter-label">Срок выполнения</label>
+                    <label className="filter-label">{auctionMode ? "Окончание аукциона" : "Срок выполнения"}</label>
                     <input type="datetime-local" value={deadlineAt} onChange={(e) => setDeadlineAt(e.target.value)} />
+                    {auctionMode ? (
+                      <p className="file-note" style={{ marginTop: 6 }}>
+                        Дата и время окончания — после этого лот уйдёт победителю в корзину.
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               ) : null}
@@ -356,21 +394,6 @@ export default function CreateListingPage() {
                 onChange={(e) => setFiles(Array.from(e.target.files || []))}
               />
               {files.length > 0 ? <div className="file-note">Выбрано файлов: {files.length}</div> : null}
-
-              <VoiceRecorder
-                disabled={loading}
-                onRecorded={(blob, mime) => {
-                  setVoiceBlob(blob);
-                  setVoiceMime(mime);
-                }}
-                onTranscript={(t) => setVoiceTranscript((prev) => (prev ? `${prev}\n${t}` : t))}
-              />
-              {voiceTranscript ? (
-                <div className="transcript-preview">
-                  <label className="filter-label">Черновик с голоса (можно править)</label>
-                  <textarea rows={3} value={voiceTranscript} onChange={(e) => setVoiceTranscript(e.target.value)} />
-                </div>
-              ) : null}
 
               <button className="primary" type="submit" disabled={loading}>
                 {loading ? "Сохранение..." : "Опубликовать"}

@@ -488,7 +488,7 @@ export default function HomePage() {
               <h2 className="youla-section-title">{t("home.auctionTitle")}</h2>
               <p className="youla-section-subtitle">{t("home.auctionSub")}</p>
             </div>
-            <Link href="/create-listing" className="youla-auction-add-btn">
+            <Link href="/create-listing?auction=1" className="youla-auction-add-btn">
               {t("home.auctionAdd")}
             </Link>
           </div>

@@ -206,6 +206,9 @@ export default function AppHeader({
           <Link href="/create-listing" className="youla-btn-post">
             {t("header.postListing")}
           </Link>
+          <Link href="/create-listing?auction=1" className="youla-btn-post youla-btn-auction">
+            {t("header.auctionPost")}
+          </Link>
 
           <div className="youla-header-tools">
             <select
@@ -284,6 +287,9 @@ export default function AppHeader({
         <div className="top-nav-right">
           <Link href="/create-listing" className="copy-action-link strong">
             {t("header.postListingPlus")}
+          </Link>
+          <Link href="/create-listing?auction=1" className="copy-action-link strong">
+            {t("header.auctionPost")}
           </Link>
           <Link href="/my-listings" className="copy-action-link">
             {t("header.myListings")}

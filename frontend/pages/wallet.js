@@ -4,8 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 
 import AppHeader from "../components/AppHeader";
 import AuthPhoneForm from "../components/AuthPhoneForm";
+import PageIntroBanner from "../components/PageIntroBanner";
 import { apiFetch } from "../lib/api";
+import { CONTENT_IMAGES } from "../lib/contentAssets";
 import { formatAmountRuTj } from "../lib/i18n";
+import { useLanguage } from "../contexts/LanguageContext";
 
 function formatSom(n) {
   if (n == null || Number.isNaN(Number(n))) return "—";
@@ -14,6 +17,7 @@ function formatSom(n) {
 
 export default function WalletPage() {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [authed, setAuthed] = useState(false);
   const [balance, setBalance] = useState(null);
@@ -201,7 +205,15 @@ export default function WalletPage() {
               {message ? <p className="auth-message">{message}</p> : null}
             </>
           ) : (
-            <p className="wallet-muted">Войдите, чтобы управлять балансом и продвижением.</p>
+            <div className="favorites-guest">
+              <PageIntroBanner
+                title={t("header.walletTitle")}
+                subtitle={t("account.walletGuestSubtitle")}
+                imageUrl={CONTENT_IMAGES.profile}
+                imageAlt=""
+              />
+              <p className="favorites-guest-tip">{t("account.walletGuestTip")}</p>
+            </div>
           )}
         </main>
       </div>
